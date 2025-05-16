@@ -1,1677 +1,1921 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notes</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css" />
     <style>
-        @font-face {
-            font-family: 'IRANYekanX';
-            src: url('Webfonts/woff2/IRANYekanX-Regular.woff2') format('woff2'),
-                 url('Webfonts/woff/IRANYekanX-Regular.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
+      @font-face {
+        font-family: "IRANYekanX";
+        src: url("Webfonts/woff2/IRANYekanX-Regular.woff2") format("woff2"), url("Webfonts/woff/IRANYekanX-Regular.woff") format("woff");
+        font-weight: normal;
+        font-style: normal;
+      }
 
-        @font-face {
-            font-family: 'IRANYekanX';
-            src: url('Webfonts/woff2/IRANYekanX-Bold.woff2') format('woff2'),
-                 url('Webfonts/woff/IRANYekanX-Bold.woff') format('woff');
-            font-weight: bold;
-            font-style: normal;
-        }
-        * {
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-        }
+      @font-face {
+        font-family: "IRANYekanX";
+        src: url("Webfonts/woff2/IRANYekanX-Bold.woff2") format("woff2"), url("Webfonts/woff/IRANYekanX-Bold.woff") format("woff");
+        font-weight: bold;
+        font-style: normal;
+      }
+      * {
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+      }
 
-        :root {
-            --bg-color: #f0f2f5;
-            --editor-bg: #fff;
-            --toolbar-bg: #f8f9fa;
-            --border-color: #e4e6e8;
-            --text-color: #333;
-            --sidebar-bg: #fff;
-            --button-hover: #fff;
-            --input-bg: #fff;
-        }
+      :root {
+        --bg-color: #f0f2f5;
+        --editor-bg: #fff;
+        --toolbar-bg: #f8f9fa;
+        --border-color: #e4e6e8;
+        --text-color: #333;
+        --sidebar-bg: #fff;
+        --button-hover: #fff;
+        --input-bg: #fff;
+        --text-color-rgb: 51, 51, 51; /* RGB for #333 */
+      }
 
-        body.dark-mode {
-            --bg-color: #1a1a1a;
-            --editor-bg: #1e1e1e;
-            --toolbar-bg: #2d2d2d;
-            --border-color: #333;
-            --text-color: #f0f0f0;
-            --sidebar-bg: #1e1e1e;
-            --button-hover: #333;
-            --input-bg: #2d2d2d;
-        }
+      body.dark-mode {
+        --bg-color: #1a1a1a;
+        --editor-bg: #1e1e1e;
+        --toolbar-bg: #2d2d2d;
+        --border-color: #333;
+        --text-color: #f0f0f0;
+        --sidebar-bg: #1e1e1e;
+        --button-hover: #333;
+        --input-bg: #2d2d2d;
+        --text-color-rgb: 240, 240, 240; /* RGB for #f0f0f0 */
+      }
 
+      body {
+        font-family: "IRANYekanX", Arial, sans-serif !important;
+        font-size: 20px !important;
+        max-width: 100%;
+        margin: 0;
+        padding: 20px;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
 
+      .title-format {
+        font-size: 40px !important;
+        font-weight: 900 !important;
+        color: #2ecc71 !important;
+        margin: 25px 0 !important;
+        line-height: 1.1 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: inline-block;
+      }
 
+      body.dark-mode .title-format {
+        color: #2ecc71 !important;
+      }
+
+      #editor {
+        min-width: auto;
+        width: 100%;
+        min-height: 650px;
+        padding: 30px;
+        margin: 20px auto;
+        border: none;
+        border-radius: 0;
+        background-color: transparent;
+        color: var(--text-color);
+        box-shadow: none;
+        direction: rtl;
+        text-align: right;
+        line-height: 2.1;
+        outline: none;
+        overflow-y: auto;
+        font-size: 20px !important;
+        font-family: "IRANYekanX", Arial, sans-serif !important;
+        resize: vertical;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+      }
+
+      #editor:focus {
+        border-color: transparent;
+        box-shadow: none;
+      }
+
+      .controls {
+        background: var(--editor-bg);
+        padding: 8px;
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 0;
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        justify-content: center;
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .toolbar-group {
+        display: flex;
+        gap: 2px;
+        align-items: center;
+        padding: 4px;
+        margin: 0 4px;
+        background: var(--toolbar-bg);
+        border-radius: 6px;
+      }
+      .toolbar-group:last-child {
+        margin-left: 0;
+      }
+
+      .controls button {
+        padding: 8px;
+        background-color: transparent;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: "IRANYekanX", Arial, sans-serif;
+        transition: all 0.2s ease;
+        min-width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        color: var(--text-color);
+      }
+
+      .controls .title-button {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2c3e50;
+        border: 2px solid transparent;
+        padding: 6px 12px;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 100%);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        min-width: 40px;
+        transition: all 0.3s ease;
+      }
+
+      .controls .title-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .controls .title-button:active {
+        transform: translateY(0);
+      }
+
+      body.dark-mode .controls button {
+        color: #f0f0f0;
+        border-color: #333;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 100%);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+
+      body.dark-mode .controls button:hover {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.2) 100%);
+        border-color: #f0f0f0;
+      }
+
+      body.dark-mode .controls button:active {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.3) 100%);
+        border-color: #f0f0f0;
+      }
+
+      body.dark-mode .controls .title-button {
+        color: #666;
+        border-color: #666;
+        background: linear-gradient(145deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.2) 100%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+      }
+
+      .controls button:hover {
+        background-color: var(--button-hover);
+        border-color: var(--border-color);
+        transform: translateY(-1px);
+      }
+
+      select {
+        padding: 6px 8px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        height: 32px;
+        font-family: "IRANYekanX", Arial, sans-serif;
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        cursor: pointer;
+      }
+
+      select:focus {
+        outline: none;
+        border-color: #4dabf7;
+        box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2);
+      }
+
+      .utility-buttons {
+        margin-right: auto;
+        display: flex;
+        gap: 8px;
+      }
+
+      .pcr-app {
+        min-width: 160px !important;
+        max-width: 220px !important;
+        font-size: 14px !important;
+        padding: 10px 14px !important;
+      }
+
+      .sidebar button {
+        padding: 12px 16px;
+        background-color: #4dabf7;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-bottom: 8px;
+        font-family: "IRANYekanX", Arial, sans-serif;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar button:last-of-type {
+        margin-bottom: 15px;
+      }
+
+      .sidebar button:hover {
+        background-color: #339af0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .sidebar button:active {
+        transform: translateY(0);
+      }
+
+      #documentsList {
+        margin-top: 10px;
+        max-height: 300px;
+        overflow-y: auto;
+        background: var(--sidebar-bg);
+        color: var(--text-color);
+      }
+
+      .document-item {
+        padding: 12px;
+        margin-bottom: 8px;
+        background-color: var(--toolbar-bg);
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text-color);
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+        overflow: hidden;
+      }
+
+      .document-item:hover {
+        background-color: var(--button-hover);
+        border-color: var(--border-color);
+        transform: none;
+      }
+
+      .document-item span {
+        flex-grow: 1;
+        margin-right: 10px;
+        text-align: right;
+        direction: rtl;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .delete-btn {
+        background-color: transparent;
+        border: none;
+        color: #ff6b6b;
+        cursor: pointer;
+        font-size: 18px;
+        padding: 0 5px;
+        border-radius: 4px;
+        transition: opacity 0.3s ease;
+        margin: 0 0 0 10px;
+        flex-shrink: 0;
+        opacity: 0;
+      }
+
+      .document-item:hover .delete-btn {
+        opacity: 1;
+      }
+
+      .delete-btn:hover {
+        background-color: rgba(255, 107, 107, 0.1);
+        transform: none;
+      }
+
+      .search-box,
+      #searchBox {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background: var(--input-bg);
+        color: var(--text-color);
+        font-family: "IRANYekanX", Arial, sans-serif;
+      }
+
+      #documentTitle {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-family: "IRANYekanX", Arial, sans-serif;
+        background: var(--input-bg);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+      }
+
+      #documentTitle:focus {
+        border-color: #4dabf7;
+        box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+        outline: none;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 100;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: var(--editor-bg);
+        border: 2px solid var(--border-color);
+        color: var(--text-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .theme-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .theme-toggle:active {
+        transform: scale(0.95);
+      }
+
+      /* Responsive Design */
+      @media screen and (max-width: 1200px) {
         body {
-            font-family: 'IRANYekanX', Arial, sans-serif !important;
-            font-size: 20px !important;
-            max-width: 100%;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-
-        .title-format {
-            font-size: 40px !important;
-            font-weight: 900 !important;
-            color: #2ECC71 !important;
-            margin: 25px 0 !important;
-            line-height: 1.1 !important;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: inline-block;
-        }
-
-        body.dark-mode .title-format {
-            color: #2ECC71 !important;
-        }
-
-        #editor {
-            min-width: auto;
-            width: 100%;
-            min-height: 650px;
-            padding: 20px;
-            margin-top: 0;
-            border: none;
-            border-radius: 0;
-            background-color: transparent;
-            color: var(--text-color);
-            box-shadow: none;
-            direction: rtl;
-            text-align: right;
-            line-height: 2.1;
-            outline: none;
-            overflow-y: auto;
-            font-size: 24px !important;
-            font-family: 'IRANYekanX', Arial, sans-serif !important;
-            resize: vertical;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        #editor:focus {
-            border-color: transparent;
-            box-shadow: none;
-        }
-
-        .controls {
-            background: var(--editor-bg);
-            padding: 8px;
-            border-radius: 12px 12px 0 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            margin-bottom: 0;
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            align-items: center;
-            width: 100%;
-            box-sizing: border-box;
-            justify-content: center;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .toolbar-group {
-            display: flex;
-            gap: 2px;
-            align-items: center;
-            padding: 4px;
-            margin: 0 4px;
-            background: var(--toolbar-bg);
-            border-radius: 6px;
-        }
-        .toolbar-group:last-child {
-            margin-left: 0;
-        }
-
-        .controls button {
-            padding: 8px;
-            background-color: transparent;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'IRANYekanX', Arial, sans-serif;
-            transition: all 0.2s ease;
-            min-width: 32px;
-            height: 32px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            color: var(--text-color);
-        }
-
-        .controls .title-button {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c3e50;
-            border: 2px solid transparent;
-            padding: 6px 12px;
-            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.1) 100%);
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
-            min-width: 40px;
-            transition: all 0.3s ease;
-        }
-
-        .controls .title-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .controls .title-button:active {
-            transform: translateY(0);
-        }
-
-        body.dark-mode .controls button {
-            color: #f0f0f0;
-            border-color: #333;
-            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.1) 100%);
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
-        }
-
-        body.dark-mode .controls button:hover {
-            background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 100%);
-            border-color: #f0f0f0;
-        }
-
-        body.dark-mode .controls button:active {
-            background: linear-gradient(145deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.3) 100%);
-            border-color: #f0f0f0;
-        }
-
-        body.dark-mode .controls .title-button {
-            color: #666;
-            border-color: #666;
-            background: linear-gradient(145deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.2) 100%);
-            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
-        }
-
-        .controls button:hover {
-            background-color: var(--button-hover);
-            border-color: var(--border-color);
-            transform: translateY(-1px);
-        }
-
-        select {
-            padding: 6px 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            height: 32px;
-            font-family: 'IRANYekanX', Arial, sans-serif;
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            cursor: pointer;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: #4dabf7;
-            box-shadow: 0 0 0 2px rgba(77,171,247,0.2);
-        }
-
-        .utility-buttons {
-            margin-right: auto;
-            display: flex;
-            gap: 8px;
-        }
-
-        .pcr-app {
-            min-width: 160px !important;
-            max-width: 220px !important;
-            font-size: 14px !important;
-            padding: 10px 14px !important;
-        }
-
-        .sidebar button {
-            padding: 12px 16px;
-            background-color: #4dabf7;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-bottom: 8px;
-            font-family: 'IRANYekanX', Arial, sans-serif;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .sidebar button:last-of-type {
-             margin-bottom: 15px;
-        }
-
-        .sidebar button:hover {
-            background-color: #339af0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-
-        .sidebar button:active {
-            transform: translateY(0);
-        }
-
-        #documentsList {
-            margin-top: 10px;
-            max-height: 300px;
-            overflow-y: auto;
-            background: var(--sidebar-bg);
-            color: var(--text-color);
-        }
-
-        .document-item {
-            padding: 12px;
-            margin-bottom: 8px;
-            background-color: var(--toolbar-bg);
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-color);
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            overflow: hidden;
-        }
-
-        .document-item:hover {
-            background-color: var(--button-hover);
-            border-color: var(--border-color);
-            transform: none;
-        }
-
-        .document-item span {
-            flex-grow: 1;
-            margin-right: 10px;
-            text-align: right;
-            direction: rtl;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .delete-btn {
-            background-color: transparent;
-            border: none;
-            color: #ff6b6b;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 0 5px;
-            border-radius: 4px;
-            transition: opacity 0.3s ease;
-            margin: 0 0 0 10px;
-            flex-shrink: 0;
-            opacity: 0;
-        }
-
-        .document-item:hover .delete-btn {
-            opacity: 1;
-        }
-
-        .delete-btn:hover {
-            background-color: rgba(255,107,107,0.1);
-            transform: none;
-        }
-
-        .search-box, #searchBox {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background: var(--input-bg);
-            color: var(--text-color);
-            font-family: 'IRANYekanX', Arial, sans-serif;
-        }
-
-        #documentTitle {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-family: 'IRANYekanX', Arial, sans-serif;
-            background: var(--input-bg);
-            color: var(--text-color);
-            transition: all 0.3s ease;
-        }
-
-        #documentTitle:focus {
-            border-color: #4dabf7;
-            box-shadow: 0 0 0 3px rgba(77,171,247,0.2);
-            outline: none;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 100;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: var(--editor-bg);
-            border: 2px solid var(--border-color);
-            color: var(--text-color);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-        }
-
-        .theme-toggle:active {
-            transform: scale(0.95);
-        }
-
-        /* Responsive Design */
-        @media screen and (max-width: 1200px) {
-            body {
-                padding: 10px;
-            }
-
-            .sidebar {
-                width: 220px;
-            }
-
-            .main-content {
-                margin-left: 250px;
-                width: calc(100% - 270px);
-            }
-
-            .main-content.expanded {
-                margin-left: 20px;
-                width: calc(100% - 40px);
-            }
-
-            #editor {
-                font-size: 28px;
-            }
-        }
-
-        @media screen and (max-width: 992px) {
-            .sidebar {
-                top: 0;
-                height: 100vh;
-                max-height: 100vh;
-            }
-
-            .sidebar-header {
-                top: 0;
-                left: 0;
-                width: 100%;
-                border-radius: 0;
-            }
-
-            .main-content {
-                margin-left: 20px;
-                width: calc(100% - 40px);
-            }
-
-            .theme-toggle {
-                left: 20px;
-                bottom: 20px;
-            }
-        }
-
-        @media screen and (max-width: 768px) {
-            body {
-                font-size: 20px !important;
-            }
-
-            #editor {
-                font-size: 28px;
-                min-height: 500px;
-            }
-
-            .controls {
-                padding: 4px;
-            }
-
-            .controls button {
-                padding: 6px;
-                font-size: 14px;
-            }
-
-            .toolbar-group {
-                padding: 2px;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            body {
-                padding: 5px;
-            }
-
-            .main-content {
-                margin: 10px;
-                width: calc(100% - 20px);
-            }
-
-            #editor {
-                font-size: 26px;
-                padding: 10px;
-            }
-
-            .controls button {
-                padding: 4px;
-                font-size: 12px;
-            }
-        }
-
-        .menu-toggle {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1001;
-            background: var(--editor-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 24px;
-            color: var(--text-color);
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .menu-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            background: var(--button-hover);
-        }
-
-        .menu-toggle:active {
-            transform: scale(0.95);
-        }
-
-        .menu-toggle.active {
-            background: var(--button-hover);
-            border-color: var(--text-color);
-        }
-
-        body.dark-mode .menu-toggle {
-            background: var(--editor-bg);
-            border-color: var(--border-color);
-            color: var(--text-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        body.dark-mode .menu-toggle:hover {
-            background: var(--button-hover);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        body.dark-mode .menu-toggle.active {
-            background: var(--button-hover);
-            border-color: var(--text-color);
-        }
-
-        .sidebar-header {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 250px;
-            background: var(--sidebar-bg);
-            padding: 10px 20px;
-            border-radius: 12px 12px 0 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar.hidden .sidebar-header {
-            left: -280px;
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .sidebar.visible .sidebar-header {
-            left: 20px;
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .menu-toggle-container {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1002;
-        }
-
-        .sidebar-content {
-            margin-top: 60px;
-        }
-
-        /* Notification System */
-        .notification-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 350px;
-        }
-
-        .notification {
-            background: var(--editor-bg);
-            border-right: 4px solid #4dabf7;
-            border-radius: 8px;
-            padding: 15px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transform: translateX(120%);
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .notification::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 3px;
-            background: currentColor;
-            width: 100%;
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s linear;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        .notification.show::after {
-            transform: scaleX(1);
-        }
-
-        .notification.hide {
-            transform: translateX(120%);
-            opacity: 0;
-        }
-
-        .notification.success {
-            border-right-color: #2ecc71;
-        }
-
-        .notification.error {
-            border-right-color: #e74c3c;
-        }
-
-        .notification.warning {
-            border-right-color: #f1c40f;
-        }
-
-        .notification.info {
-            border-right-color: #3498db;
-        }
-
-        .notification-icon {
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-
-        .notification-content {
-            flex-grow: 1;
-        }
-
-        .notification-title {
-            font-weight: bold;
-            margin-bottom: 4px;
-            color: var(--text-color);
-        }
-
-        .notification-message {
-            color: var(--text-color);
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        .notification-close {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            opacity: 0.5;
-            cursor: pointer;
-            padding: 4px;
-            font-size: 18px;
-            transition: opacity 0.2s;
-        }
-
-        .notification-close:hover {
-            opacity: 1;
-        }
-
-        /* Floating Toolbar */
-        .floating-toolbar {
-            position: fixed;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            display: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            pointer-events: auto;
-            cursor: pointer;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .floating-toolbar.show {
-            display: block;
-            opacity: 1;
-        }
-
-        .floating-toolbar:hover {
-            width: auto;
-            height: auto;
-            border-radius: 8px;
-            padding: 8px;
-            overflow: visible;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .floating-toolbar .toolbar-content {
-            display: flex;
-            flex-direction: row;
-            gap: 4px;
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            white-space: nowrap;
-            margin: 0;
-        }
-
-        .floating-toolbar:hover .toolbar-content {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .floating-toolbar .toolbar-group {
-            display: flex;
-            gap: 2px;
-            align-items: center;
-            padding: 4px;
-            margin: 0;
-            background: var(--toolbar-bg);
-            border-radius: 6px;
-        }
-
-        .floating-toolbar button {
-            padding: 6px;
-            background-color: transparent;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'IRANYekanX', Arial, sans-serif;
-            transition: all 0.2s ease;
-            min-width: 28px;
-            height: 28px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: var(--text-color);
-        }
-
-        .floating-toolbar button:hover {
-            background-color: var(--button-hover);
-            border-color: var(--border-color);
-            transform: translateY(-1px);
-        }
-
-        .floating-toolbar .title-button {
-            font-size: 20px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .floating-toolbar .pcr-app {
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            z-index: 10000 !important;
-        }
-
-        body.dark-mode .floating-toolbar {
-            background: rgba(0, 0, 0, 0.3);
-            border-color: transparent;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-
-        .floating-toolbar::before {
-            content: '✎';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 16px;
-            color: var(--text-color);
-            transition: opacity 0.3s ease;
-        }
-
-        .floating-toolbar:hover::before {
-            opacity: 0;
-        }
-
-        /* Modern Enhanced Scrollbar */
-        ::-webkit-scrollbar {
-            width: 12px;
-            height: 12px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 6px;
-            margin: 2px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 6px;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            transition: all 0.2s ease;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.9);
-        }
-
-        /* Firefox Scrollbar */
-        * {
-            scrollbar-width: auto;
-            scrollbar-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.05);
-        }
-
-        /* Dark Mode Scrollbar */
-        body.dark-mode ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        body.dark-mode ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.95);
-            border: 2px solid rgba(0, 0, 0, 0.8);
-        }
-
-        body.dark-mode ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 1);
-            border: 2px solid rgba(0, 0, 0, 0.9);
-        }
-
-        body.dark-mode * {
-            scrollbar-color: rgba(255, 255, 255, 0.95) rgba(255, 255, 255, 0.2);
+          padding: 10px;
         }
 
         .sidebar {
-            position: fixed;
-            left: 20px;
-            top: 70px;
-            width: 300px;
-            background: var(--sidebar-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            max-height: calc(100vh - 90px);
-            overflow-y: auto;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar.hidden {
-            left: -280px;
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .sidebar.visible {
-            left: 20px;
-            opacity: 1;
-            visibility: visible;
+          width: 220px;
         }
 
         .main-content {
-            margin-left: 290px;
-            margin-right: 20px;
-            width: calc(100% - 310px);
-            transition: all 0.3s ease;
-            height: calc(100vh - 40px);
+          margin-left: 250px;
+          width: calc(100% - 270px);
         }
 
         .main-content.expanded {
-            margin-left: 20px;
-            width: calc(100% - 40px);
-        }
-
-        .editor-container {
-            width: 100%;
-            margin: 0 auto;
-            padding: 20px;
-            direction: rtl;
-            max-width: 1200px;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            background-color: transparent;
+          margin-left: 20px;
+          width: calc(100% - 40px);
         }
 
         #editor {
-            min-width: auto;
-            width: 100%;
-            min-height: 650px;
-            padding: 20px;
-            margin-top: 0;
-            border: none;
-            border-radius: 0;
-            background-color: transparent;
-            color: var(--text-color);
-            box-shadow: none;
-            direction: rtl;
-            text-align: right;
-            line-height: 2.1;
-            outline: none;
-            overflow-y: auto;
-            font-size: 24px !important;
-            font-family: 'IRANYekanX', Arial, sans-serif !important;
-            resize: vertical;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+          font-size: 28px;
+        }
+      }
+
+      @media screen and (max-width: 992px) {
+        .sidebar {
+          top: 0;
+          height: 100vh;
+          max-height: 100vh;
         }
 
-        #editor:focus {
-            border-color: transparent;
-            box-shadow: none;
+        .sidebar-header {
+          top: 0;
+          left: 0;
+          width: 100%;
+          border-radius: 0;
         }
 
-        /* Text Size Control Menu */
-        .text-size-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
-            padding: 8px;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+        .main-content {
+          margin-left: 20px;
+          width: calc(100% - 40px);
         }
 
-        .text-size-control button {
-            background: transparent;
-            border: none;
-            color: var(--text-color);
-            opacity: 0.6;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: all 0.2s ease;
+        .theme-toggle {
+          left: 20px;
+          bottom: 20px;
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        body {
+          font-size: 20px !important;
         }
 
-        .text-size-control button:hover {
-            opacity: 1;
-            background: rgba(0, 0, 0, 0.05);
+        #editor {
+          font-size: 28px;
+          min-height: 500px;
         }
 
-        body.dark-mode .text-size-control {
-            background: rgba(0, 0, 0, 0.2);
+        .controls {
+          padding: 4px;
         }
 
-        body.dark-mode .text-size-control button:hover {
-            background: rgba(255, 255, 255, 0.1);
+        .controls button {
+          padding: 6px;
+          font-size: 14px;
         }
 
-        .sidebar-content > button {
-            padding: 12px 16px;
-            background-color: #4dabf7;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-bottom: 8px;
-            font-family: 'IRANYekanX', Arial, sans-serif;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .toolbar-group {
+          padding: 2px;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        body {
+          padding: 5px;
         }
 
-        .sidebar-content > button:last-of-type {
-             margin-bottom: 15px;
+        .main-content {
+          margin: 10px;
+          width: calc(100% - 20px);
         }
 
-        .sidebar-content > button:hover {
-            background-color: #339af0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        #editor {
+          font-size: 26px;
+          padding: 10px;
         }
 
-        .sidebar-content > button:active {
-            transform: translateY(0);
+        .controls button {
+          padding: 4px;
+          font-size: 12px;
         }
+      }
+
+      .menu-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1001;
+        background: var(--editor-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 24px;
+        color: var(--text-color);
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .menu-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background: var(--button-hover);
+      }
+
+      .menu-toggle:active {
+        transform: scale(0.95);
+      }
+
+      .menu-toggle.active {
+        background: var(--button-hover);
+        border-color: var(--text-color);
+      }
+
+      body.dark-mode .menu-toggle {
+        background: var(--editor-bg);
+        border-color: var(--border-color);
+        color: var(--text-color);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      body.dark-mode .menu-toggle:hover {
+        background: var(--button-hover);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      body.dark-mode .menu-toggle.active {
+        background: var(--button-hover);
+        border-color: var(--text-color);
+      }
+
+      .sidebar-header {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 250px;
+        background: var(--sidebar-bg);
+        padding: 10px 20px;
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar.hidden .sidebar-header {
+        left: -280px;
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .sidebar.visible .sidebar-header {
+        left: 20px;
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .menu-toggle-container {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1002;
+      }
+
+      .sidebar-content {
+        margin-top: 60px;
+      }
+
+      /* Notification System */
+      .notification-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 350px;
+      }
+
+      .notification {
+        background: var(--editor-bg);
+        border-right: 4px solid #4dabf7;
+        border-radius: 8px;
+        padding: 15px 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transform: translateX(120%);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .notification::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: currentColor;
+        width: 100%;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s linear;
+      }
+
+      .notification.show {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      .notification.show::after {
+        transform: scaleX(1);
+      }
+
+      .notification.hide {
+        transform: translateX(120%);
+        opacity: 0;
+      }
+
+      .notification.success {
+        border-right-color: #2ecc71;
+      }
+
+      .notification.error {
+        border-right-color: #e74c3c;
+      }
+
+      .notification.warning {
+        border-right-color: #f1c40f;
+      }
+
+      .notification.info {
+        border-right-color: #3498db;
+      }
+
+      .notification-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+
+      .notification-content {
+        flex-grow: 1;
+      }
+
+      .notification-title {
+        font-weight: bold;
+        margin-bottom: 4px;
+        color: var(--text-color);
+      }
+
+      .notification-message {
+        color: var(--text-color);
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      .notification-close {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        opacity: 0.5;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 18px;
+        transition: opacity 0.2s;
+      }
+
+      .notification-close:hover {
+        opacity: 1;
+      }
+
+      /* Floating Toolbar */
+      .floating-toolbar {
+        position: fixed;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        pointer-events: auto;
+        cursor: pointer;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .floating-toolbar.show {
+        display: block;
+        opacity: 1;
+      }
+
+      .floating-toolbar:hover {
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+        padding: 8px;
+        overflow: visible;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .floating-toolbar .toolbar-content {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+        opacity: 0;
+        transform: scale(0.8);
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        white-space: nowrap;
+        margin: 0;
+      }
+
+      .floating-toolbar:hover .toolbar-content {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .floating-toolbar .toolbar-group {
+        display: flex;
+        gap: 2px;
+        align-items: center;
+        padding: 4px;
+        margin: 0;
+        background: var(--toolbar-bg);
+        border-radius: 6px;
+      }
+
+      .floating-toolbar button {
+        padding: 6px;
+        background-color: transparent;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: "IRANYekanX", Arial, sans-serif;
+        transition: all 0.2s ease;
+        min-width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: var(--text-color);
+      }
+
+      .floating-toolbar button:hover {
+        background-color: var(--button-hover);
+        border-color: var(--border-color);
+        transform: translateY(-1px);
+      }
+
+      .floating-toolbar .title-button {
+        font-size: 20px;
+        font-weight: bold;
+        color: #2c3e50;
+      }
+
+      .floating-toolbar .pcr-app {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        z-index: 10000 !important;
+      }
+
+      body.dark-mode .floating-toolbar {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      }
+
+      .floating-toolbar::before {
+        content: "✎";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 16px;
+        color: var(--text-color);
+        transition: opacity 0.3s ease;
+      }
+
+      .floating-toolbar:hover::before {
+        opacity: 0;
+      }
+
+      /* Modern Enhanced Scrollbar */
+      ::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 6px;
+        margin: 2px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        transition: all 0.2s ease;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid rgba(255, 255, 255, 0.9);
+      }
+
+      /* Firefox Scrollbar */
+      * {
+        scrollbar-width: auto;
+        scrollbar-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.05);
+      }
+
+      /* Dark Mode Scrollbar */
+      body.dark-mode ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      body.dark-mode ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.95);
+        border: 2px solid rgba(0, 0, 0, 0.8);
+      }
+
+      body.dark-mode ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 1);
+        border: 2px solid rgba(0, 0, 0, 0.9);
+      }
+
+      body.dark-mode * {
+        scrollbar-color: rgba(255, 255, 255, 0.95) rgba(255, 255, 255, 0.2);
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 20px;
+        top: 70px;
+        width: 300px;
+        background: var(--sidebar-bg);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        max-height: calc(100vh - 90px);
+        overflow-y: auto;
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar.hidden {
+        left: -280px;
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .sidebar.visible {
+        left: 20px;
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .main-content {
+        margin-left: 290px;
+        margin-right: 20px;
+        width: calc(100% - 310px);
+        transition: all 0.3s ease;
+        height: calc(100vh - 40px);
+      }
+
+      .main-content.expanded {
+        margin-left: 20px;
+        width: calc(100% - 40px);
+      }
+
+      .editor-container {
+        width: 100%;
+        margin: 0 auto;
+        padding: 20px;
+        direction: rtl;
+        max-width: 1200px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        background-color: transparent;
+      }
+
+      #editor {
+        min-width: auto;
+        width: 100%;
+        min-height: 650px;
+        padding: 30px;
+        margin: 20px auto;
+        border: none;
+        border-radius: 0;
+        background-color: transparent;
+        color: var(--text-color);
+        box-shadow: none;
+        direction: rtl;
+        text-align: right;
+        line-height: 2.1;
+        outline: none;
+        overflow-y: auto;
+        font-size: 20px !important;
+        font-family: "IRANYekanX", Arial, sans-serif !important;
+        resize: vertical;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+      }
+
+      #editor:focus {
+        border-color: transparent;
+        box-shadow: none;
+      }
+
+      .sidebar-content > button {
+        padding: 12px 16px;
+        background-color: #4dabf7;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-bottom: 8px;
+        font-family: "IRANYekanX", Arial, sans-serif;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar-content > button:last-of-type {
+        margin-bottom: 15px;
+      }
+
+      .sidebar-content > button:hover {
+        background-color: #339af0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .sidebar-content > button:active {
+        transform: translateY(0);
+      }
+
+      /* Text Size Control Menu */
+      .minimap-marker {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 5px; /* Adjust height as needed */
+        background-color: #2ecc71; /* Color for title markers */
+        opacity: 0.7;
+        z-index: 10; /* Ensure markers are above slider background */
+        cursor: pointer;
+        pointer-events: auto; /* Allow clicks on markers */
+      }
+
+      /* Current View Marker */
+      .current-view-marker {
+        position: absolute;
+        left: 0; /* Align to the left */
+        transform: none; /* Remove transform as it's a bar, not centered */
+        width: 100%; /* Make it span the full width of the minimap */
+        height: 5px; /* Height of the bar - adjust as needed */
+        background-color: #ffffff; /* White color */
+        border-radius: 0; /* No rounded corners */
+        z-index: 11; /* Ensure it's above title markers */
+        pointer-events: none; /* Don't block clicks on minimap */
+      }
+
+      /* Minimap Slider */
+      #minimap-slider {
+        position: fixed;
+        top: 20px; /* Align with editor top */
+        right: 10px; /* Position closer to the right */
+        width: 30px; /* Adjust width as needed, make it thinner */
+        height: calc(100vh - 40px); /* Adjust height as needed, match main content height */
+        background: rgba(0, 0, 0, 0.05); /* Semi-transparent background */
+        border-radius: 8px;
+        z-index: 999; /* Above other content but below notifications */
+        overflow-y: hidden; /* Hide its own scrollbar */
+        opacity: 0; /* Start hidden */
+        pointer-events: none; /* Not interactive when hidden */
+        transition: opacity 0.3s ease; /* Smooth transition */
+      }
+
+      body.dark-mode #minimap-slider {
+        background: rgba(255, 255, 255, 0.1);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="notification-container" id="notificationContainer"></div>
     <div class="menu-toggle-container">
-        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+      <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
     </div>
     <div class="sidebar">
-        <div class="sidebar-content">
-            <h2 style="margin: 0 0 15px 0; font-size: 18px; color: var(--text-color);">یادداشت‌ها</h2>
-            <input type="text" id="documentTitle" placeholder="عنوان سند...">
-            <button onclick="saveDocument()">ذخیره سند</button>
-            <button onclick="newDocument()">سند جدید</button>
-            <button onclick="saveToFile()">ذخیره به فایل</button>
-            <button onclick="loadFromFile()">بارگذاری از فایل</button>
-            <input type="text" id="searchDocs" placeholder="جستجو در اسناد..." class="search-box">
-            <div id="documentsList"></div>
-        </div>
+      <div class="sidebar-content">
+        <h2 style="margin: 0 0 15px 0; font-size: 18px; color: var(--text-color)">یادداشت‌ها</h2>
+        <input type="text" id="documentTitle" placeholder="عنوان سند..." />
+        <button onclick="saveDocument()">ذخیره سند</button>
+        <button onclick="newDocument()">سند جدید</button>
+        <button onclick="saveToFile()">ذخیره به فایل</button>
+        <button onclick="loadFromFile()">بارگذاری از فایل</button>
+        <input type="text" id="searchDocs" placeholder="جستجو در اسناد..." class="search-box" />
+        <div id="documentsList"></div>
+      </div>
     </div>
     <div class="main-content">
-    <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
-    <div class="editor-container">
-    <div id="editor" contenteditable="true" spellcheck="true" style="text-align: right; direction: rtl;">اینجا شروع به نوشتن کنید...</div>
+      <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+      <div class="editor-container">
+        <!-- Document Title Display -->
+        <h1 id="mainDocumentTitleDisplay" style="text-align: center; font-size: 32px; margin-bottom: 20px; color: rgba(var(--text-color-rgb), 0.6)"></h1>
 
-    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
-    <script>
-        // Notification System
-        const notificationTypes = {
-            success: { icon: '✅', color: '#2ecc71' },
-            error: { icon: '❌', color: '#e74c3c' },
-            warning: { icon: '⚠️', color: '#f1c40f' },
-            info: { icon: 'ℹ️', color: '#3498db' }
-        };
+        <div id="editor" contenteditable="true" spellcheck="true" style="text-align: right; direction: rtl">اینجا شروع به نوشتن کنید...</div>
 
-        let notificationQueue = [];
-        let isProcessingQueue = false;
+        <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+        <script>
+          // Notification System
+          const notificationTypes = {
+            success: { icon: "✅", color: "#2ecc71" },
+            error: { icon: "❌", color: "#e74c3c" },
+            warning: { icon: "⚠️", color: "#f1c40f" },
+            info: { icon: "ℹ️", color: "#3498db" },
+          };
 
-        function processNotificationQueue() {
+          let notificationQueue = [];
+          let isProcessingQueue = false;
+
+          function processNotificationQueue() {
             if (isProcessingQueue || notificationQueue.length === 0) return;
-            
+
             isProcessingQueue = true;
             const { title, message, type, duration } = notificationQueue.shift();
-            
-            const container = document.getElementById('notificationContainer');
+
+            const container = document.getElementById("notificationContainer");
             if (!container) return;
 
-            const notification = document.createElement('div');
+            const notification = document.createElement("div");
             notification.className = `notification ${type}`;
-            
+
             const typeConfig = notificationTypes[type] || notificationTypes.info;
 
             notification.innerHTML = `
-                <span class="notification-icon">${typeConfig.icon}</span>
-                <div class="notification-content">
-                    <div class="notification-title">${title}</div>
-                    <div class="notification-message">${message}</div>
-                </div>
-                <button class="notification-close" onclick="this.parentElement.remove(); isProcessingQueue = false; processNotificationQueue();">×</button>
-            `;
+                    <span class="notification-icon">${typeConfig.icon}</span>
+                    <div class="notification-content">
+                        <div class="notification-title">${title}</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
+                    <button class="notification-close" onclick="this.parentElement.remove(); isProcessingQueue = false; processNotificationQueue();">×</button>
+                `;
 
             container.appendChild(notification);
-            
+
             requestAnimationFrame(() => {
-                notification.classList.add('show');
+              notification.classList.add("show");
             });
 
             if (duration > 0) {
+              setTimeout(() => {
+                notification.classList.add("hide");
                 setTimeout(() => {
-                    notification.classList.add('hide');
-                    setTimeout(() => {
-                        if (notification.parentElement) {
-                            notification.remove();
-                        }
-                        isProcessingQueue = false;
-                        processNotificationQueue();
-                    }, 300);
-                }, duration);
+                  if (notification.parentElement) {
+                    notification.remove();
+                  }
+                  isProcessingQueue = false;
+                  processNotificationQueue();
+                }, 300);
+              }, duration);
             }
-        }
+          }
 
-        function showNotification(title, message, type = 'info', duration = 3000) {
+          function showNotification(title, message, type = "info", duration = 3000) {
             notificationQueue.push({ title, message, type, duration });
             processNotificationQueue();
-        }
+          }
 
-        // Focus Mode
-        function toggleFocusMode() {
-            document.body.classList.toggle('focus-mode');
-            const isFocusMode = document.body.classList.contains('focus-mode');
-            localStorage.setItem('focusMode', isFocusMode);
+          // Focus Mode
+          function toggleFocusMode() {
+            document.body.classList.toggle("focus-mode");
+            const isFocusMode = document.body.classList.contains("focus-mode");
+            localStorage.setItem("focusMode", isFocusMode);
             showNotification(
-                isFocusMode ? 'حالت تمرکز فعال شد' : 'حالت تمرکز غیرفعال شد',
-                isFocusMode ? 'تمام المان‌های اضافی مخفی شدند' : 'تمام المان‌ها نمایش داده شدند',
-                'info'
+              isFocusMode ? "حالت تمرکز فعال شد" : "حالت تمرکز غیرفعال شد",
+              isFocusMode ? "تمام المان‌های اضافی مخفی شدند" : "تمام المان‌ها نمایش داده شدند",
+              "info"
             );
-        }
+          }
 
-        // Initialize focus mode from localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedFocusMode = localStorage.getItem('focusMode') === 'true';
+          // Initialize focus mode from localStorage
+          document.addEventListener("DOMContentLoaded", function () {
+            const savedFocusMode = localStorage.getItem("focusMode") === "true";
             if (savedFocusMode) {
-                document.body.classList.add('focus-mode');
+              document.body.classList.add("focus-mode");
             }
-        });
+          });
 
-        // Replace all alerts with notifications
-        function saveDocument() {
-            const title = document.getElementById('documentTitle').value.trim();
+          // Replace all alerts with notifications
+          function saveDocument() {
+            const title = document.getElementById("documentTitle").value.trim();
             const content = editor.innerHTML;
 
             if (!title) {
-                return; // حذف هشدار عدم وجود عنوان
+              return; // حذف هشدار عدم وجود عنوان
             }
 
             try {
-                // ذخیره محتوای سند در localStorage
-                localStorage.setItem('savedNotes', content);
+              // ذخیره محتوای سند در localStorage
+              localStorage.setItem("savedNotes", content);
 
-                if (!currentDocId) {
-                    currentDocId = Date.now().toString();
-                    documents.push({ 
-                        id: currentDocId, 
-                        title: title, 
-                        content: content, 
-                        createdAt: new Date().toISOString()
-                    });
-                } else {
-                    const docIndex = documents.findIndex(d => d.id === currentDocId);
-                    if (docIndex !== -1) {
-                        documents[docIndex] = { 
-                            id: currentDocId, 
-                            title: title, 
-                            content: content, 
-                            createdAt: documents[docIndex].createdAt
-                        };
-                    }
+              if (!currentDocId) {
+                currentDocId = Date.now().toString();
+                documents.push({
+                  id: currentDocId,
+                  title: title,
+                  content: content,
+                  createdAt: new Date().toISOString(),
+                });
+              } else {
+                const docIndex = documents.findIndex((d) => d.id === currentDocId);
+                if (docIndex !== -1) {
+                  documents[docIndex] = {
+                    id: currentDocId,
+                    title: title,
+                    content: content,
+                    createdAt: documents[docIndex].createdAt,
+                  };
                 }
+              }
 
-                localStorage.setItem('documents', JSON.stringify(documents));
-                updateDocumentsList();
+              localStorage.setItem("documents", JSON.stringify(documents));
+              updateDocumentsList();
             } catch (e) {
-                // حذف هشدار خطا در ذخیره
+              // حذف هشدار خطا در ذخیره
             }
-        }
+          }
 
-        function deleteDocument(id) {
+          function deleteDocument(id) {
             const confirmDelete = () => {
-                const index = documents.findIndex(d => d.id === id);
-                if (index !== -1) {
-                    documents.splice(index, 1);
-                    localStorage.setItem('documents', JSON.stringify(documents));
-                    if (currentDocId === id) {
-                        newDocument();
-                    }
-                    updateDocumentsList();
-                    showNotification('موفق', 'سند با موفقیت حذف شد', 'success');
+              const index = documents.findIndex((d) => d.id === id);
+              if (index !== -1) {
+                documents.splice(index, 1);
+                localStorage.setItem("documents", JSON.stringify(documents));
+                if (currentDocId === id) {
+                  newDocument();
                 }
+                updateDocumentsList();
+                showNotification("موفق", "سند با موفقیت حذف شد", "success");
+              }
             };
 
             // Create a confirmation dialog
-            const confirmation = confirm('آیا از حذف این سند مطمئن هستید؟');
+            const confirmation = confirm("آیا از حذف این سند مطمئن هستید؟");
             if (confirmation) {
-                confirmDelete();
+              confirmDelete();
             }
-        }
+          }
 
-        function toggleTitleFormat() {
+          function toggleTitleFormat() {
             const selection = window.getSelection();
             if (!selection.rangeCount || selection.isCollapsed) {
-                showNotification('هشدار', 'لطفاً متن را انتخاب کنید', 'warning');
-                return;
+              showNotification("هشدار", "لطفاً متن را انتخاب کنید", "warning");
+              return;
             }
 
             const range = selection.getRangeAt(0);
             const selectedContent = range.extractContents();
-            const titleSpan = document.createElement('span');
-            titleSpan.className = 'title-format';
+            const titleSpan = document.createElement("span");
+            titleSpan.className = "title-format";
             titleSpan.appendChild(selectedContent);
             range.insertNode(titleSpan);
 
             // Clear selection and focus editor
             selection.removeAllRanges();
-            document.getElementById('editor').focus();
-        }
+            document.getElementById("editor").focus();
+          }
 
-        function removeTitleFormat() {
+          function removeTitleFormat() {
             const selection = window.getSelection();
             if (!selection.rangeCount || selection.isCollapsed) {
-                showNotification('هشدار', 'لطفاً متن را انتخاب کنید', 'warning');
-                return;
+              showNotification("هشدار", "لطفاً متن را انتخاب کنید", "warning");
+              return;
             }
 
             const range = selection.getRangeAt(0);
             const selectedNode = range.commonAncestorContainer;
-            
+
             // Find all title-format elements within the selection
-            const titleElements = document.querySelectorAll('.title-format');
-            titleElements.forEach(titleElement => {
-                if (range.intersectsNode(titleElement)) {
-                    // Replace title element with its text content
-                    const text = titleElement.textContent;
-                    const textNode = document.createTextNode(text);
-                    titleElement.parentNode.replaceChild(textNode, titleElement);
-                }
+            const titleElements = document.querySelectorAll(".title-format");
+            titleElements.forEach((titleElement) => {
+              if (range.intersectsNode(titleElement)) {
+                // Replace title element with its text content
+                const text = titleElement.textContent;
+                const textNode = document.createTextNode(text);
+                titleElement.parentNode.replaceChild(textNode, titleElement);
+              }
             });
 
             // Clear selection and focus editor
             selection.removeAllRanges();
-            document.getElementById('editor').focus();
-        }
+            document.getElementById("editor").focus();
+          }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            editor = document.getElementById('editor');
-            updateFontSizeDisplay(fontSizes[currentFontSizeIndex]);
-        });
-        // Theme toggle
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+          document.addEventListener("DOMContentLoaded", function () {
+            editor = document.getElementById("editor");
+          });
+          // Theme toggle
+          function toggleTheme() {
+            document.body.classList.toggle("dark-mode");
+            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
             updateThemeButton();
-        }
+          }
 
-        function updateThemeButton() {
-            const btn = document.querySelector('.theme-toggle');
-            if (document.body.classList.contains('dark-mode')) {
-                btn.innerHTML = '🌙';
+          function updateThemeButton() {
+            const btn = document.querySelector(".theme-toggle");
+            if (document.body.classList.contains("dark-mode")) {
+              btn.innerHTML = "🌙";
             } else {
-                btn.innerHTML = '☀️';
+              btn.innerHTML = "☀️";
             }
-        }
+          }
 
-        // Load theme preference
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
+          // Load theme preference
+          if (localStorage.getItem("darkMode") === "true") {
+            document.body.classList.add("dark-mode");
             updateThemeButton();
-            
+
             // Update color picker for dark mode
-            document.querySelectorAll('.pcr-button').forEach(btn => {
-                btn.style.boxShadow = '0 0 0 1px rgba(255,255,255,0.2)';
+            document.querySelectorAll(".pcr-button").forEach((btn) => {
+              btn.style.boxShadow = "0 0 0 1px rgba(255,255,255,0.2)";
             });
-        }
-        
-        // Update color picker when theme changes
-        document.addEventListener('DOMContentLoaded', function() {
+          }
+
+          // Update color picker when theme changes
+          document.addEventListener("DOMContentLoaded", function () {
             // Fix color picker in dark mode
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.attributeName === 'class') {
-                        const isDarkMode = document.body.classList.contains('dark-mode');
-                        document.querySelectorAll('.pcr-app').forEach(picker => {
-                            if (isDarkMode) {
-                                picker.style.background = '#2d2d2d';
-                                picker.style.color = '#fff';
-                                picker.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
-                            } else {
-                                picker.style.background = '#fff';
-                                picker.style.color = '#000';
-                                picker.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
-                            }
-                        });
+            const observer = new MutationObserver(function (mutations) {
+              mutations.forEach(function (mutation) {
+                if (mutation.attributeName === "class") {
+                  const isDarkMode = document.body.classList.contains("dark-mode");
+                  document.querySelectorAll(".pcr-app").forEach((picker) => {
+                    if (isDarkMode) {
+                      picker.style.background = "#2d2d2d";
+                      picker.style.color = "#fff";
+                      picker.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
+                    } else {
+                      picker.style.background = "#fff";
+                      picker.style.color = "#000";
+                      picker.style.boxShadow = "0 0 10px rgba(0,0,0,0.1)";
                     }
-                });
+                  });
+                }
+              });
             });
-            
+
             observer.observe(document.body, { attributes: true });
-        });
+          });
 
-
-        function clearFormatting() {
-            document.getElementById('editor').focus();
-            document.execCommand('removeFormat', false, null);
-            document.execCommand('formatBlock', false, 'DIV');
-        }
-        // Fix horizontal line button color issue
-        document.addEventListener('DOMContentLoaded', function() {
-            const hrButton = document.querySelector('.hr-button');
+          function clearFormatting() {
+            document.getElementById("editor").focus();
+            document.execCommand("removeFormat", false, null);
+            document.execCommand("formatBlock", false, "DIV");
+          }
+          // Fix horizontal line button color issue
+          document.addEventListener("DOMContentLoaded", function () {
+            const hrButton = document.querySelector(".hr-button");
             if (hrButton) {
-                // Apply same styling as other buttons
-                hrButton.style.color = getComputedStyle(document.documentElement).getPropertyValue('--text-color');
-                
-                hrButton.addEventListener('click', function() {
-                    // Force focus back to editor after inserting HR
-                    setTimeout(() => {
-                        document.getElementById('editor').focus();
-                    }, 10);
-                });
+              // Apply same styling as other buttons
+              hrButton.style.color = getComputedStyle(document.documentElement).getPropertyValue("--text-color");
+
+              hrButton.addEventListener("click", function () {
+                // Force focus back to editor after inserting HR
+                setTimeout(() => {
+                  document.getElementById("editor").focus();
+                }, 10);
+              });
             }
-        });
-        
-        function insertHR() {
-            document.getElementById('editor').focus();
-            document.execCommand('insertHorizontalRule');
-        }
+          });
 
+          function insertHR() {
+            document.getElementById("editor").focus();
+            document.execCommand("insertHorizontalRule");
+          }
 
+          // Document management
+          let currentDocId = null;
+          let documents = JSON.parse(localStorage.getItem("documents")) || [];
 
-        // Document management
-        let currentDocId = null;
-        let documents = JSON.parse(localStorage.getItem('documents')) || [];
+          // Initialize event listeners
+          document.querySelector('button[onclick="saveDocument()"]').addEventListener("click", saveDocument);
+          document.querySelector('button[onclick="newDocument()"]').addEventListener("click", newDocument);
+          document.getElementById("searchDocs").addEventListener("input", updateDocumentsList);
 
-        // Initialize event listeners
-        document.querySelector('button[onclick="saveDocument()"]').addEventListener('click', saveDocument);
-        document.querySelector('button[onclick="newDocument()"]').addEventListener('click', newDocument);
-        document.getElementById('searchDocs').addEventListener('input', updateDocumentsList);
+          // Update documents list when page loads
+          updateDocumentsList();
 
-        // Update documents list when page loads
-        updateDocumentsList();
+          function updateDocumentsList() {
+            const searchTerm = document.getElementById("searchDocs").value.toLowerCase();
+            const list = document.getElementById("documentsList");
+            list.innerHTML = "";
 
-        function updateDocumentsList() {
-            const searchTerm = document.getElementById('searchDocs').value.toLowerCase();
-            const list = document.getElementById('documentsList');
-            list.innerHTML = '';
-            
             documents
-                .filter(doc => doc.title.toLowerCase().includes(searchTerm))
-                .forEach(doc => {
-                    const docElement = document.createElement('div');
-                    docElement.className = 'document-item';
-                    docElement.innerHTML = `
-                        <span style="font-weight: bold;">${doc.title}</span>
-                        <button onclick="deleteDocument('${doc.id}')" class="delete-btn">×</button>
-                    `;
-                    docElement.onclick = (e) => {
-                        if (e.target.tagName !== 'BUTTON') {
-                            loadDocument(doc.id);
-                        }
-                    };
-                    list.appendChild(docElement);
-                });
-        }
+              .filter((doc) => doc.title.toLowerCase().includes(searchTerm))
+              .forEach((doc) => {
+                const docElement = document.createElement("div");
+                docElement.className = "document-item";
+                docElement.innerHTML = `
+                            <span style="font-weight: bold;">${doc.title}</span>
+                            <button onclick="deleteDocument('${doc.id}')" class="delete-btn">×</button>
+                        `;
+                docElement.onclick = (e) => {
+                  if (e.target.tagName !== "BUTTON") {
+                    loadDocument(doc.id);
+                  }
+                };
+                list.appendChild(docElement);
+              });
+          }
 
-        function loadDocument(id) {
-            const doc = documents.find(d => d.id === id);
+          function loadDocument(id) {
+            const doc = documents.find((d) => d.id === id);
             if (doc) {
-                // بارگذاری سند
-                currentDocId = doc.id;
-                editor.innerHTML = doc.content;
-                document.getElementById('documentTitle').value = doc.title;
-                changeFontSize(doc.fontSize);
+              // بارگذاری سند
+              currentDocId = doc.id;
+              editor.innerHTML = doc.content;
+              document.getElementById("documentTitle").value = doc.title;
+              document.getElementById("mainDocumentTitleDisplay").textContent = doc.title; // Update the main title display
             }
-        }
+          }
 
-        function newDocument() {
+          function newDocument() {
             currentDocId = null;
-            editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
-            document.getElementById('documentTitle').value = '';
-            resetTextSize();
-        }
+            editor.innerHTML = "اینجا شروع به نوشتن کنید...";
+            document.getElementById("documentTitle").value = "";
+            document.getElementById("mainDocumentTitleDisplay").textContent = "عنوان جدید"; // Set default for main display
+          }
 
-        // Color picker initialization
-        
-        function applyColorToSelection(color) {
+          // Color picker initialization
+
+          function applyColorToSelection(color) {
             // Focus the editor and apply color to the current selection
             editor.focus();
-            document.execCommand('foreColor', false, color.toHEXA().toString());
-        }
+            document.execCommand("foreColor", false, color.toHEXA().toString());
+          }
 
-        // Initialize
-        document.getElementById('searchDocs').addEventListener('input', updateDocumentsList);
-        updateDocumentsList();
-    </script>
-    <div class="text-size-control">
-        <button onclick="decreaseTextSize()" title="کاهش سایز متن">A-</button>
-        <button onclick="resetTextSize()" title="بازنشانی سایز متن">A</button>
-        <button onclick="increaseTextSize()" title="افزایش سایز متن">A+</button>
-    </div>
-
-    <script>
-        // Global variables
-        let currentTextSize = 30;
-        const editor = document.getElementById('editor');
-
-        // Text Size Control Functions
-        function decreaseTextSize() {
-            console.log('decreaseTextSize called');
-            if (currentTextSize > 16) {
-                currentTextSize -= 2;
-                editor.style.fontSize = currentTextSize + 'px';
-                localStorage.setItem('textSize', currentTextSize);
-                console.log('New text size:', currentTextSize);
-            }
-        }
-
-        function resetTextSize() {
-            console.log('resetTextSize called');
-            currentTextSize = 30;
-            editor.style.fontSize = currentTextSize + 'px';
-            localStorage.setItem('textSize', currentTextSize);
-            console.log('New text size:', currentTextSize);
-        }
-
-        function increaseTextSize() {
-            console.log('increaseTextSize called');
-            if (currentTextSize < 40) {
-                currentTextSize += 2;
-                editor.style.fontSize = currentTextSize + 'px';
-                localStorage.setItem('textSize', currentTextSize);
-                console.log('New text size:', currentTextSize);
-            }
-        }
-
-        // Load saved text size
-        window.addEventListener('load', function() {
-            const savedSize = localStorage.getItem('textSize');
-            if (savedSize) {
-                currentTextSize = parseInt(savedSize);
-            } else {
-                // If no saved size, use the default initial size (30)
-                localStorage.setItem('textSize', currentTextSize);
-            }
-             // Always apply the determined size on load
-            editor.style.fontSize = currentTextSize + 'px';
-            updateFontSizeDisplay(currentTextSize); // Assuming you have a display function
-        });
-
-        // Document Management
-        function newDocument() {
-            currentDocId = null;
-            editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
-            document.getElementById('documentTitle').value = '';
-            resetTextSize();
-        }
-    </script>
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
-            const menuToggle = document.querySelector('.menu-toggle');
-            
-            if (sidebar.classList.contains('hidden')) {
-                // Show sidebar
-                sidebar.classList.remove('hidden');
-                sidebar.classList.add('visible');
-                mainContent.classList.remove('expanded');
-                menuToggle.innerHTML = '✕';
-            } else {
-                // Hide sidebar
-                sidebar.classList.add('hidden');
-                sidebar.classList.remove('visible');
-                mainContent.classList.add('expanded');
-                menuToggle.innerHTML = '☰';
-            }
-        }
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            const sidebar = document.querySelector('.sidebar');
-            const menuToggle = document.querySelector('.menu-toggle');
-            const mainContent = document.querySelector('.main-content');
-            
-            if (window.innerWidth <= 992 && 
-                !sidebar.contains(event.target) && 
-                !menuToggle.contains(event.target) && 
-                sidebar.classList.contains('visible')) {
-                sidebar.classList.add('hidden');
-                sidebar.classList.remove('visible');
-                mainContent.classList.add('expanded');
-                menuToggle.classList.add('active');
-                menuToggle.innerHTML = '✕';
-            }
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
-            const menuToggle = document.querySelector('.menu-toggle');
-            
-            if (window.innerWidth > 992) {
-                // Keep the sidebar state (hidden/visible) when resizing
-                if (sidebar.classList.contains('hidden')) {
-                    sidebar.classList.remove('visible');
-                    mainContent.classList.add('expanded');
-                    menuToggle.classList.add('active');
-                    menuToggle.innerHTML = '✕';
-                } else {
-                    sidebar.classList.add('visible');
-                    mainContent.classList.remove('expanded');
-                    menuToggle.classList.remove('active');
-                    menuToggle.innerHTML = '☰';
-                }
-            }
-        });
-
-        // Initialize menu state
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.querySelector('.sidebar');
-            const menuToggle = document.querySelector('.menu-toggle');
-            const mainContent = document.querySelector('.main-content');
-            
-            if (sidebar.classList.contains('hidden')) {
-                sidebar.classList.remove('visible');
-                mainContent.classList.add('expanded');
-                menuToggle.classList.add('active');
-                menuToggle.innerHTML = '✕';
-            } else {
-                sidebar.classList.add('visible');
-                mainContent.classList.remove('expanded');
-                menuToggle.classList.remove('active');
-                menuToggle.innerHTML = '☰';
-            }
-        });
-    </script>
-    <div class="floating-toolbar" id="floatingToolbar">
-        <div class="toolbar-content">
+          // Initialize
+          document.getElementById("searchDocs").addEventListener("input", updateDocumentsList);
+          updateDocumentsList();
+        </script>
+        <div class="floating-toolbar" id="floatingToolbar">
+          <div class="toolbar-content">
             <div class="toolbar-group">
-                <button onclick="document.execCommand('bold')" title="درشت کردن متن">B</button>
-                <button onclick="document.execCommand('italic')" title="مورب کردن متن">I</button>
-                <button onclick="document.execCommand('underline')" title="زیرخط دار کردن متن">U</button>
+              <button onclick="applyStyle('bold')" title="درشت کردن متن">B</button>
+              <button onclick="applyStyle('italic')" title="مورب کردن متن">I</button>
+              <button onclick="applyStyle('underline')" title="زیرخط دار کردن متن">U</button>
             </div>
             <div class="toolbar-group">
-                <button onclick="toggleTitleFormat()" class="title-button" title="تبدیل به عنوان">T</button>
-                <button onclick="removeTitleFormat()" class="title-button" title="حذف حالت عنوان" style="color: #e74c3c !important;">t</button>
+              <button onclick="toggleTitleFormat()" class="title-button" title="تبدیل به عنوان">T</button>
+              <button onclick="removeTitleFormat()" class="title-button" title="حذف حالت عنوان" style="color: #e74c3c !important">t</button>
             </div>
             <div class="toolbar-group">
-                <button onclick="document.execCommand('justifyRight')" title="راست‌چین کردن متن">≡ →</button>
-                <button onclick="document.execCommand('justifyCenter')" title="وسط‌چین کردن متن">≡ •</button>
-                <button onclick="document.execCommand('justifyLeft')" title="چپ‌چین کردن متن">≡ ←</button>
+              <button onclick="document.execCommand('justifyRight')" title="راست‌چین کردن متن">≡ →</button>
+              <button onclick="document.execCommand('justifyCenter')" title="وسط‌چین کردن متن">≡ •</button>
+              <button onclick="document.execCommand('justifyLeft')" title="چپ‌چین کردن متن">≡ ←</button>
             </div>
             <div class="toolbar-group">
-                <button onclick="document.execCommand('insertUnorderedList')" title="لیست نقطه‌ای">•</button>
-                <button onclick="document.execCommand('insertOrderedList')" title="لیست شماره‌ای">1.</button>
+              <button onclick="document.execCommand('insertUnorderedList')" title="لیست نقطه‌ای">•</button>
+              <button onclick="document.execCommand('insertOrderedList')" title="لیست شماره‌ای">1.</button>
             </div>
             <div class="toolbar-group">
-                <div id="floating-color-picker"></div>
+              <div id="floating-color-picker"></div>
             </div>
+          </div>
         </div>
-    </div>
-    <script>
-        // Floating Toolbar
-        const floatingToolbar = document.getElementById('floatingToolbar');
-        let selectionTimeout;
+        <script>
+          // Floating Toolbar
+          const floatingToolbar = document.getElementById("floatingToolbar");
+          let selectionTimeout;
 
-        // Color picker initialization for the floating toolbar
-        const floatingPickr = Pickr.create({
-            el: '#floating-color-picker',
-            theme: 'nano',
-            default: '#000000',
-            swatches: [
-                '#ffffff', '#000000', '#e74c3c', '#f1c40f', '#2ecc71',
-                '#3498db', '#9b59b6'
-            ],
+          // Color picker initialization for the floating toolbar
+          const floatingPickr = Pickr.create({
+            el: "#floating-color-picker",
+            theme: "nano",
+            default: "#000000",
+            swatches: ["#ffffff", "#000000", "#e74c3c", "#f1c40f", "#2ecc71", "#3498db", "#9b59b6"],
             components: {
-                preview: true,
-                opacity: true,
-                hue: true,
-                interaction: {
-                    hex: true,
-                    rgba: true,
-                    hsla: false,
-                    hsva: false,
-                    cmyk: false,
-                    input: true,
-                    clear: false,
-                    save: true
-                }
-            }
-        });
+              preview: true,
+              opacity: true,
+              hue: true,
+              interaction: {
+                hex: true,
+                rgba: true,
+                hsla: false,
+                hsva: false,
+                cmyk: false,
+                input: true,
+                clear: false,
+                save: true,
+              },
+            },
+          });
 
-        function applyColorToSelection(color) {
-            // Focus the editor and apply color to the current selection
-            editor.focus();
-            document.execCommand('foreColor', false, color.toHEXA().toString());
-        }
-
-        floatingPickr.on('save', (color) => {
-            applyColorToSelection(color);
-            floatingPickr.hide();
-        });
-
-        floatingPickr.on('change', (color) => {
-            if (color) {
-                applyColorToSelection(color);
-            }
-        });
-
-        function showFloatingToolbar(x, y) {
+          function showFloatingToolbar(x, y) {
             floatingToolbar.style.left = `${x}px`;
             floatingToolbar.style.top = `${y}px`;
-            floatingToolbar.classList.add('show');
+            floatingToolbar.classList.add("show");
             // Explicitly show the pickr instance when the toolbar is shown
             if (pickr) {
-                pickr.show();
+              pickr.show();
             }
-        }
+          }
 
-        function hideFloatingToolbar() {
-            floatingToolbar.classList.remove('show');
-        }
+          function hideFloatingToolbar() {
+            floatingToolbar.classList.remove("show");
+          }
 
-        document.getElementById('editor').addEventListener('mouseup', function(e) {
+          document.getElementById("editor").addEventListener("mouseup", function (e) {
             const selection = window.getSelection();
-            
+
             if (selection.toString().length > 0) {
-                clearTimeout(selectionTimeout);
-                
-                const range = selection.getRangeAt(0);
-                const rect = range.getBoundingClientRect();
-                
-                // Calculate position for the toolbar - now on the left and aboveW
-                const x = rect.left - 20; // Show to the left of selection
-                const y = rect.top - 20; // Position above the selection
-                
-                selectionTimeout = setTimeout(() => {
-                    showFloatingToolbar(x, y);
-                }, 100);
+              clearTimeout(selectionTimeout);
+
+              const range = selection.getRangeAt(0);
+              const rect = range.getBoundingClientRect();
+
+              // Calculate position for the toolbar - now on the left and aboveW
+              const x = rect.left - 20; // Show to the left of selection
+              const y = rect.top - 20; // Position above the selection
+
+              selectionTimeout = setTimeout(() => {
+                showFloatingToolbar(x, y);
+              }, 100);
             } else {
-                clearTimeout(selectionTimeout);
-                hideFloatingToolbar();
+              clearTimeout(selectionTimeout);
+              hideFloatingToolbar();
             }
-        });
+          });
 
-        // Hide toolbar when clicking outside
-        document.addEventListener('mousedown', function(e) {
+          // Hide toolbar when clicking outside
+          document.addEventListener("mousedown", function (e) {
             if (!floatingToolbar.contains(e.target) && e.target !== editor) {
-                hideFloatingToolbar();
+              hideFloatingToolbar();
             }
-        });
+          });
 
-        // Update floating toolbar position on scroll
-        document.getElementById('editor').addEventListener('scroll', function() {
+          // Update floating toolbar position on scroll
+          document.getElementById("editor").addEventListener("scroll", function () {
             const selection = window.getSelection();
             if (selection.toString().length > 0) {
-                const range = selection.getRangeAt(0);
-                const rect = range.getBoundingClientRect();
-                const x = rect.left - 20;
-                const y = rect.top - 20;
-                showFloatingToolbar(x, y);
+              const range = selection.getRangeAt(0);
+              const rect = range.getBoundingClientRect();
+              const x = rect.left - 20;
+              const y = rect.top - 20;
+              showFloatingToolbar(x, y);
             }
-        });
+          });
 
-        // Update floating toolbar position on window resize
-        window.addEventListener('resize', function() {
+          // Update floating toolbar position on window resize
+          window.addEventListener("resize", function () {
             const selection = window.getSelection();
             if (selection.toString().length > 0) {
-                const range = selection.getRangeAt(0);
-                const rect = range.getBoundingClientRect();
-                const x = rect.left - 20;
-                const y = rect.top - 20;
-                showFloatingToolbar(x, y);
+              const range = selection.getRangeAt(0);
+              const rect = range.getBoundingClientRect();
+              const x = rect.left - 20;
+              const y = rect.top - 20;
+              showFloatingToolbar(x, y);
             }
-        });
-    </script>
-    <script>
-        function saveToFile() {
-            const title = document.getElementById('documentTitle').value.trim();
+          });
+        </script>
+        <script>
+          function saveToFile() {
+            const title = document.getElementById("documentTitle").value.trim();
             const content = editor.innerHTML;
 
             if (!title) {
-                alert('لطفاً عنوان سند را وارد کنید');
-                return;
+              alert("لطفاً عنوان سند را وارد کنید");
+              return;
             }
 
-            const blob = new Blob([content], { type: 'text/html' });
+            const blob = new Blob([content], { type: "text/html" });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
+            const a = document.createElement("a");
             a.href = url;
             a.download = `${title}.html`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-        }
-    </script>
-    <script>
-        function loadFromFile() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.html';
+          }
+        </script>
+        <script>
+          function loadFromFile() {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = ".html";
             input.onchange = (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        editor.innerHTML = e.target.result;
-                        document.getElementById('documentTitle').value = file.name.replace('.html', '');
-                    };
-                    reader.readAsText(file);
-                }
+              const file = event.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  editor.innerHTML = e.target.result;
+                  document.getElementById("documentTitle").value = file.name.replace(".html", "");
+                };
+                reader.readAsText(file);
+              }
             };
             input.click();
-        }
-    </script>
-</body>
+          }
+        </script>
+        <script>
+          function toggleSidebar() {
+            const sidebar = document.querySelector(".sidebar");
+            const mainContent = document.querySelector(".main-content");
+            const menuToggle = document.querySelector(".menu-toggle");
+
+            if (sidebar.classList.contains("hidden")) {
+              // Show sidebar
+              sidebar.classList.remove("hidden");
+              sidebar.classList.add("visible");
+              mainContent.classList.remove("expanded");
+              menuToggle.innerHTML = "✕";
+            } else {
+              // Hide sidebar
+              sidebar.classList.add("hidden");
+              sidebar.classList.remove("visible");
+              mainContent.classList.add("expanded");
+              menuToggle.innerHTML = "☰";
+            }
+          }
+
+          // Close sidebar when clicking outside on mobile
+          document.addEventListener("click", function (event) {
+            const sidebar = document.querySelector(".sidebar");
+            const menuToggle = document.querySelector(".menu-toggle");
+            const mainContent = document.querySelector(".main-content");
+
+            if (window.innerWidth <= 992 && !sidebar.contains(event.target) && !menuToggle.contains(event.target) && sidebar.classList.contains("visible")) {
+              sidebar.classList.add("hidden");
+              sidebar.classList.remove("visible");
+              mainContent.classList.add("expanded");
+              menuToggle.classList.add("active"); // Keep menu active when sidebar is hidden
+              menuToggle.innerHTML = "✕";
+            }
+          });
+
+          // Handle window resize
+          window.addEventListener("resize", function () {
+            const sidebar = document.querySelector(".sidebar");
+            const mainContent = document.querySelector(".main-content");
+            const menuToggle = document.querySelector(".menu-toggle");
+
+            if (window.innerWidth > 992) {
+              // Keep the sidebar state (hidden/visible) when resizing
+              if (sidebar.classList.contains("hidden")) {
+                sidebar.classList.remove("visible");
+                mainContent.classList.add("expanded");
+                menuToggle.classList.add("active");
+                menuToggle.innerHTML = "✕";
+              } else {
+                sidebar.classList.add("visible");
+                mainContent.classList.remove("expanded");
+                menuToggle.classList.remove("active");
+                menuToggle.innerHTML = "☰";
+              }
+            }
+          });
+
+          // Initialize menu state
+          document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.querySelector(".sidebar");
+            const mainContent = document.querySelector(".main-content");
+            const menuToggle = document.querySelector(".menu-toggle");
+
+            // Set initial state to hidden
+            sidebar.classList.add("hidden");
+            sidebar.classList.remove("visible");
+            mainContent.classList.add("expanded");
+            menuToggle.classList.add("active");
+            menuToggle.innerHTML = "☰";
+          });
+        </script>
+        <div id="minimap-slider">
+          <div class="current-view-marker"></div>
+        </div>
+        <script>
+          // Declare elements used in minimap functionality
+          const minimapSlider = document.getElementById("minimap-slider");
+          const editor = document.getElementById("editor");
+          const currentViewMarker = minimapSlider ? minimapSlider.querySelector(".current-view-marker") : null;
+
+          function updateMinimap() {
+            // Re-get elements inside the function to ensure they are available on each call
+            const minimapSlider = document.getElementById("minimap-slider");
+            const editor = document.getElementById("editor");
+            const currentViewMarker = minimapSlider ? minimapSlider.querySelector(".current-view-marker") : null;
+
+            if (!editor || !minimapSlider || !currentViewMarker) {
+              console.error("Minimap update skipped: Required elements not found.");
+              return;
+            }
+
+            // Clear existing title markers
+            minimapSlider.querySelectorAll(".minimap-marker").forEach((marker) => marker.remove());
+
+            const titleElements = editor.querySelectorAll(".title-format");
+            const editorHeight = editor.scrollHeight; // Total scrollable height of editor
+            const minimapHeight = minimapSlider.clientHeight; // Visible height of minimap
+
+            if (editorHeight <= 0 || minimapHeight <= 0) {
+              console.warn("Minimap update skipped: Editor or minimap height is zero or negative.");
+              currentViewMarker.style.display = "none"; // Hide marker if dimensions invalid
+              return;
+            } else {
+              currentViewMarker.style.display = "block"; // Ensure marker is visible if dimensions valid
+            }
+
+            // Update title markers
+            titleElements.forEach((titleEl) => {
+              // Ensure the title element is actually in the DOM and has an offsetParent
+              if (!titleEl.offsetParent) {
+                return;
+              }
+
+              const marker = document.createElement("div");
+              marker.className = "minimap-marker";
+
+              const titlePos = titleEl.offsetTop;
+              const markerHeight = 5; // Match CSS height
+              const markerTop = Math.min(minimapHeight - markerHeight, Math.max(0, (titlePos / editorHeight) * minimapHeight));
+
+              marker.style.top = `${markerTop}px`;
+
+              // Add click listener to scroll to the title
+              marker.addEventListener("click", () => {
+                editor.scrollTop = titlePos;
+              });
+
+              minimapSlider.appendChild(marker);
+            });
+
+            // Update current view marker position and height based on editor scroll
+            const editorScrollTop = editor.scrollTop;
+            const editorVisibleHeight = editor.clientHeight; // Visible height of the editor area
+            const editorScrollableHeight = editorHeight - editorVisibleHeight; // Total space the editor can scroll
+
+            let markerVisibleHeight = 5; // Minimum height for the marker
+            let markerTop = 0;
+
+            if (editorHeight > 0) {
+              // Use editorHeight for ratio calculation
+              const visibleHeightRatio = editorVisibleHeight / editorHeight;
+              markerVisibleHeight = Math.max(5, visibleHeightRatio * minimapHeight); // Calculate height based on ratio
+              markerVisibleHeight = Math.min(markerVisibleHeight, minimapHeight); // Ensure calculated height doesn't exceed minimap height
+            }
+
+            if (editorScrollableHeight > 0) {
+              // If the editor content is scrollable
+              const scrollPercentage = editorScrollTop / editorScrollableHeight;
+              const currentMarkerScrollableHeight = minimapHeight - markerVisibleHeight;
+              markerTop = scrollPercentage * currentMarkerScrollableHeight;
+            } else {
+              // If the editor content is not scrollable
+              markerVisibleHeight = Math.min(5, minimapHeight); // Ensure min height doesn't exceed minimap height
+              markerTop = 0;
+              // Optionally, hide the marker if not scrollable at all:
+              // currentViewMarker.style.display = 'none'; return;
+            }
+
+            // Ensure marker stays within calculated scrollable bounds
+            const finalScrollableMinimapHeight = minimapHeight - markerVisibleHeight; // Re-calculate based on final height
+            markerTop = Math.max(0, Math.min(finalScrollableMinimapHeight, markerTop));
+
+            // Apply styles to the current view marker
+            currentViewMarker.style.height = `${markerVisibleHeight}px`;
+            currentViewMarker.style.top = `${markerTop}px`;
+
+            // --- Optional: Add logging for debugging ---
+            // console.log('--- updateMinimap called ---');
+            // console.log(`editor.scrollTop: ${editorScrollTop}`);
+            // console.log(`editor.scrollHeight: ${editorHeight}`);
+            // console.log(`editor.clientHeight: ${editorVisibleHeight}`);
+            // console.log(`minimapSlider.clientHeight: ${minimapHeight}`);
+            // console.log(`editorScrollableHeight: ${editorScrollableHeight}`);
+            // console.log(`markerVisibleHeight: ${markerVisibleHeight}`);
+            // console.log(`markerTop: ${markerTop}`);
+            // console.log('---');
+            // --- End logging ---
+          }
+
+          // Use MutationObserver to detect content changes in the editor
+          const observer = new MutationObserver((mutationsList, observer) => {
+            // console.log('Editor content changed, updating minimap.');
+            updateMinimap();
+          });
+
+          // Configuration for the observer:
+          const observerConfig = { childList: true, subtree: true, characterData: true, attributes: true };
+
+          // Attach event listeners and start observer on DOMContentLoaded
+          document.addEventListener("DOMContentLoaded", () => {
+            // Check if elements exist before proceeding
+            const editorElement = document.getElementById("editor");
+            const minimapSliderElement = document.getElementById("minimap-slider");
+
+            if (editorElement && minimapSliderElement) {
+              // Observe editor for content changes
+              observer.observe(editorElement, observerConfig);
+
+              // Add event listener for editor scroll
+              editorElement.addEventListener("scroll", updateMinimap);
+
+              // Add event listener for window resize
+              window.addEventListener("resize", updateMinimap);
+
+              // --- Add mousemove listener to show/hide minimap ---
+              const showMinimapThreshold = 50; // Pixels from the right edge to show minimap
+              document.addEventListener("mousemove", (event) => {
+                if (window.innerWidth - event.clientX < showMinimapThreshold) {
+                  minimapSliderElement.style.opacity = "1";
+                  minimapSliderElement.style.pointerEvents = "auto";
+                } else {
+                  minimapSliderElement.style.opacity = "0";
+                  minimapSliderElement.style.pointerEvents = "none";
+                }
+              });
+              // --- End mousemove listener ---
+
+              // Initial update
+              updateMinimap();
+            } else {
+              console.error("Minimap initialization skipped: Editor or Minimap Slider element not found!");
+            }
+          });
+        </script>
+        <script>
+          function isStyled(node, style) {
+            let currentNode = node;
+            while (currentNode && currentNode !== editor) {
+              if (style === "bold" && currentNode.tagName === "STRONG") return true;
+              if (style === "italic" && currentNode.tagName === "EM") return true;
+              if (style === "underline" && currentNode.tagName === "U") return true;
+              currentNode = currentNode.parentElement;
+            }
+            return false;
+          }
+
+          function saveSelection() {
+            const selection = window.getSelection();
+            if (!selection || !selection.rangeCount) return null;
+
+            const range = selection.getRangeAt(0);
+            const editor = document.getElementById("editor");
+
+            if (!editor.contains(range.commonAncestorContainer) && !editor.contains(range.endContainer)) {
+              return null;
+            }
+
+            return getCharacterOffsetFromSelection(editor, selection);
+          }
+
+          function restoreSelectionByCharacterOffset(container, savedOffsets) {
+            if (!savedOffsets || savedOffsets.start === undefined || savedOffsets.end === undefined) return;
+
+            const range = document.createRange();
+            range.selectNodeContents(container);
+            range.collapse(true);
+
+            let pos = 0;
+            let foundStart = false;
+            let stop = false;
+
+            const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+            let node;
+
+            while ((node = walker.nextNode()) && !stop) {
+              const textLen = node.textContent.length;
+              const nextPos = pos + textLen;
+
+              if (!foundStart && savedOffsets.start >= pos && savedOffsets.start <= nextPos) {
+                range.setStart(node, savedOffsets.start - pos);
+                foundStart = true;
+              }
+
+              if (foundStart && savedOffsets.end >= pos && savedOffsets.end <= nextPos) {
+                range.setEnd(node, savedOffsets.end - pos);
+                stop = true;
+              }
+
+              pos = nextPos;
+            }
+
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            container.focus(); // Explicitly focus
+          }
+
+          // Function to apply a style command using DOM manipulation (bold, italic, underline)
+          function applyStyle(command) {
+            const savedSelection = saveSelection();
+            const selection = window.getSelection();
+            if (!selection || !selection.rangeCount) return; // Exit if no selection
+
+            const range = selection.getRangeAt(0);
+
+            // Check if the selection is collapsed (just a cursor)
+            if (range.collapsed) {
+              // If collapsed, just apply the style to the cursor position
+              // This is complex with manual DOM and might require inserting a zero-width space with style
+              // For now, let's focus on non-collapsed selections.
+              console.warn("Styling collapsed selection is not fully implemented yet.");
+              return;
+            }
+
+            // Extract the selected content
+            const selectedContent = range.extractContents();
+
+            let styledContent;
+
+            if (command === "bold") {
+              // Check if any part of the selection is already bold
+              if (selectedContent.querySelector("strong") || isStyled(range.commonAncestorContainer, "bold")) {
+                // Unwrap bold
+                const container = document.createElement("div");
+                container.appendChild(selectedContent);
+                container.querySelectorAll("strong").forEach((strongEl) => {
+                  while (strongEl.firstChild) {
+                    strongEl.parentNode.insertBefore(strongEl.firstChild, strongEl);
+                  }
+                  strongEl.parentNode.removeChild(strongEl);
+                });
+                styledContent = document.createDocumentFragment();
+                while (container.firstChild) {
+                  styledContent.appendChild(container.firstChild);
+                }
+              } else {
+                // Wrap in bold
+                const strong = document.createElement("strong");
+                strong.appendChild(selectedContent);
+                styledContent = strong;
+              }
+            } else if (command === "italic") {
+              // Check if any part of the selection is already italic
+              if (selectedContent.querySelector("em") || isStyled(range.commonAncestorContainer, "italic")) {
+                // Unwrap italic
+                const container = document.createElement("div");
+                container.appendChild(selectedContent);
+                container.querySelectorAll("em").forEach((emEl) => {
+                  while (emEl.firstChild) {
+                    emEl.parentNode.insertBefore(emEl.firstChild, emEl);
+                  }
+                  emEl.parentNode.removeChild(emEl);
+                });
+                styledContent = document.createDocumentFragment();
+                while (container.firstChild) {
+                  styledContent.appendChild(container.firstChild);
+                }
+              } else {
+                // Wrap in italic
+                const em = document.createElement("em");
+                em.appendChild(selectedContent);
+                styledContent = em;
+              }
+            } else if (command === "underline") {
+              // Check if any part of the selection is already underlined
+              if (selectedContent.querySelector("u") || isStyled(range.commonAncestorContainer, "underline")) {
+                // Unwrap underline
+                const container = document.createElement("div");
+                container.appendChild(selectedContent);
+                container.querySelectorAll("u").forEach((uEl) => {
+                  while (uEl.firstChild) {
+                    uEl.parentNode.insertBefore(uEl.firstChild, uEl);
+                  }
+                  uEl.parentNode.removeChild(uEl);
+                });
+                styledContent = document.createDocumentFragment();
+                while (container.firstChild) {
+                  styledContent.appendChild(container.firstChild);
+                }
+              } else {
+                // Wrap in underline
+                const u = document.createElement("u");
+                u.appendChild(selectedContent);
+                styledContent = u;
+              }
+            }
+            // Add more commands here (e.g., underline, color)
+
+            // Insert the styled content back into the editor
+            range.insertNode(styledContent);
+
+            // Restore the selection
+            restoreSelectionByCharacterOffset(editor, savedSelection);
+          }
+
+          // Helper to get character offset from a selection
+          function getCharacterOffsetFromSelection(container, selection) {
+            if (!selection || !selection.rangeCount) return { start: 0, end: 0 };
+            const range = selection.getRangeAt(0);
+            const preCaretRange = range.cloneRange();
+            preCaretRange.selectNodeContents(container);
+            preCaretRange.setEnd(range.startContainer, range.startOffset);
+            const start = preCaretRange.toString().length;
+
+            const postCaretRange = range.cloneRange();
+            postCaretRange.selectNodeContents(container);
+            postCaretRange.setStart(range.endContainer, range.endOffset);
+            const end = container.textContent.length - postCaretRange.toString().length;
+            return { start, end };
+          }
+        </script>
+      </div>
+    </div>
+  </body>
 </html>
