@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css"/>
+    <style>
+        @font-face {
+            font-family: 'IRANYekanX';
+            src: url('Webfonts/woff2/IRANYekanX-Regular.woff2') format('woff2'),
+                 url('Webfonts/woff/IRANYekanX-Regular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'IRANYekanX';
+            src: url('Webfonts/woff2/IRANYekanX-Bold.woff2') format('woff2'),
+                 url('Webfonts/woff/IRANYekanX-Bold.woff') format('woff');
+            font-weight: bold;
+            font-style: normal;
+        }
+        * {
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        :root {
+            --bg-color: #f0f2f5;
+            --editor-bg: #fff;
+            --toolbar-bg: #f8f9fa;
+            --border-color: #e4e6e8;
+            --text-color: #333;
+            --sidebar-bg: #fff;
+            --button-hover: #fff;
+            --input-bg: #fff;
+        }
+
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --editor-bg: #1e1e1e;
+            --toolbar-bg: #2d2d2d;
+            --border-color: #333;
+            --text-color: #f0f0f0;
+            --sidebar-bg: #1e1e1e;
+            --button-hover: #333;
+            --input-bg: #2d2d2d;
+        }
+
+
+
+        body {
+            font-family: 'IRANYekanX', Arial, sans-serif !important;
+            font-size: 20px !important;
+            max-width: 100%;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .title-format {
+            font-size: 40px !important;
+            font-weight: 900 !important;
+            color: #2ECC71 !important;
+            margin: 25px 0 !important;
+            line-height: 1.1 !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        body.dark-mode .title-format {
+            color: #2ECC71 !important;
+        }
+
+        #editor {
+            min-width: auto;
+            width: 100%;
+            min-height: 650px;
+            padding: 20px;
+            border: none;
+            border-radius: 0;
+            background-color: transparent;
+            color: var(--text-color);
+            box-shadow: none;
+            direction: rtl;
+            text-align: right;
+            line-height: 2.1;
+            outline: none;
+            overflow-y: auto;
+            font-size: 24px !important;
+            font-family: 'IRANYekanX', Arial, sans-serif !important;
+            resize: vertical;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        #editor:focus {
+            border-color: transparent;
+            box-shadow: none;
+        }
+
+        .controls {
+            background: var(--editor-bg);
+            padding: 8px;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 0;
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .toolbar-group {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            padding: 4px;
+            margin: 0 4px;
+            background: var(--toolbar-bg);
+            border-radius: 6px;
+        }
+        .toolbar-group:last-child {
+            margin-left: 0;
+        }
+
+        .controls button {
+            padding: 8px;
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'IRANYekanX', Arial, sans-serif;
+            transition: all 0.2s ease;
+            min-width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: var(--text-color);
+        }
+
+        .controls .title-button {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            border: 2px solid transparent;
+            padding: 6px 12px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.1) 100%);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+            min-width: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .controls .title-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .controls .title-button:active {
+            transform: translateY(0);
+        }
+
+        body.dark-mode .controls button {
+            color: #f0f0f0;
+            border-color: #333;
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.1) 100%);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+        }
+
+        body.dark-mode .controls button:hover {
+            background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 100%);
+            border-color: #f0f0f0;
+        }
+
+        body.dark-mode .controls button:active {
+            background: linear-gradient(145deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.3) 100%);
+            border-color: #f0f0f0;
+        }
+
+        body.dark-mode .controls .title-button {
+            color: #666;
+            border-color: #666;
+            background: linear-gradient(145deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.2) 100%);
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+        }
+
+        .controls button:hover {
+            background-color: var(--button-hover);
+            border-color: var(--border-color);
+            transform: translateY(-1px);
+        }
+
+        select {
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            height: 32px;
+            font-family: 'IRANYekanX', Arial, sans-serif;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #4dabf7;
+            box-shadow: 0 0 0 2px rgba(77,171,247,0.2);
+        }
+
+        .utility-buttons {
+            margin-right: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .pcr-app {
+            min-width: 160px !important;
+            max-width: 220px !important;
+            font-size: 14px !important;
+            padding: 10px 14px !important;
+        }
+
+        .sidebar button {
+            padding: 8px 12px;
+            background-color: #4dabf7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 5px;
+            font-family: 'IRANYekanX', Arial, sans-serif;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar button:hover {
+            background-color: #339af0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .sidebar button:active {
+            transform: translateY(0);
+        }
+
+        #documentsList {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: var(--sidebar-bg);
+            color: var(--text-color);
+        }
+
+        .document-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: var(--toolbar-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .document-item:hover {
+            background-color: var(--button-hover);
+            border-color: var(--border-color);
+            transform: translateX(-4px);
+        }
+
+        .delete-btn {
+            background-color: transparent;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: rgba(255,107,107,0.1);
+            transform: scale(1.1);
+        }
+
+        .search-box, #searchBox {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-family: 'IRANYekanX', Arial, sans-serif;
+        }
+
+        #documentTitle {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'IRANYekanX', Arial, sans-serif;
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        #documentTitle:focus {
+            border-color: #4dabf7;
+            box-shadow: 0 0 0 3px rgba(77,171,247,0.2);
+            outline: none;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--editor-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 1200px) {
+            body {
+                padding: 10px;
+            }
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .main-content {
+                margin-left: 250px;
+                width: calc(100% - 270px);
+            }
+
+            .main-content.expanded {
+                margin-left: 20px;
+                width: calc(100% - 40px);
+            }
+
+            #editor {
+                font-size: 22px !important;
+            }
+        }
+
+        @media screen and (max-width: 992px) {
+            .sidebar {
+                top: 0;
+                height: 100vh;
+                max-height: 100vh;
+            }
+
+            .sidebar-header {
+                top: 0;
+                left: 0;
+                width: 100%;
+                border-radius: 0;
+            }
+
+            .main-content {
+                margin-left: 20px;
+                width: calc(100% - 40px);
+            }
+
+            .theme-toggle {
+                left: 20px;
+                bottom: 20px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            body {
+                font-size: 20px !important;
+            }
+
+            #editor {
+                font-size: 22px !important;
+                min-height: 500px;
+            }
+
+            .controls {
+                padding: 4px;
+            }
+
+            .controls button {
+                padding: 6px;
+                font-size: 14px;
+            }
+
+            .toolbar-group {
+                padding: 2px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .main-content {
+                margin: 10px;
+                width: calc(100% - 20px);
+            }
+
+            #editor {
+                font-size: 18px !important;
+                padding: 10px;
+            }
+
+            .controls button {
+                padding: 4px;
+                font-size: 12px;
+            }
+        }
+
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--editor-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .menu-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: var(--button-hover);
+        }
+
+        .menu-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .menu-toggle.active {
+            background: var(--button-hover);
+            border-color: var(--text-color);
+        }
+
+        body.dark-mode .menu-toggle {
+            background: var(--editor-bg);
+            border-color: var(--border-color);
+            color: var(--text-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        body.dark-mode .menu-toggle:hover {
+            background: var(--button-hover);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .menu-toggle.active {
+            background: var(--button-hover);
+            border-color: var(--text-color);
+        }
+
+        .sidebar-header {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 250px;
+            background: var(--sidebar-bg);
+            padding: 10px 20px;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.hidden .sidebar-header {
+            left: -280px;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .sidebar.visible .sidebar-header {
+            left: 20px;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .menu-toggle-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1002;
+        }
+
+        .sidebar-content {
+            margin-top: 60px;
+        }
+
+        /* Notification System */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        .notification {
+            background: var(--editor-bg);
+            border-right: 4px solid #4dabf7;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: currentColor;
+            width: 100%;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s linear;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification.show::after {
+            transform: scaleX(1);
+        }
+
+        .notification.hide {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+
+        .notification.success {
+            border-right-color: #2ecc71;
+        }
+
+        .notification.error {
+            border-right-color: #e74c3c;
+        }
+
+        .notification.warning {
+            border-right-color: #f1c40f;
+        }
+
+        .notification.info {
+            border-right-color: #3498db;
+        }
+
+        .notification-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+        }
+
+        .notification-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: var(--text-color);
+        }
+
+        .notification-message {
+            color: var(--text-color);
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            opacity: 0.5;
+            cursor: pointer;
+            padding: 4px;
+            font-size: 18px;
+            transition: opacity 0.2s;
+        }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+        /* Floating Toolbar */
+        .floating-toolbar {
+            position: fixed;
+            background: var(--editor-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: auto;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .floating-toolbar.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .floating-toolbar:hover {
+            width: auto;
+            height: auto;
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+        .floating-toolbar .toolbar-content {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            white-space: nowrap;
+        }
+
+        .floating-toolbar:hover .toolbar-content {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .floating-toolbar .toolbar-group {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            padding: 4px;
+            margin: 0 4px;
+            background: var(--toolbar-bg);
+            border-radius: 6px;
+        }
+
+        .floating-toolbar button {
+            padding: 6px;
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'IRANYekanX', Arial, sans-serif;
+            transition: all 0.2s ease;
+            min-width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .floating-toolbar button:hover {
+            background-color: var(--button-hover);
+            border-color: var(--border-color);
+            transform: translateY(-1px);
+        }
+
+        .floating-toolbar .title-button {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .floating-toolbar #floating-color-picker {
+            width: 28px;
+            height: 28px;
+        }
+
+        .floating-toolbar .pcr-app {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            z-index: 10000 !important;
+        }
+
+        body.dark-mode .floating-toolbar {
+            background: var(--editor-bg);
+            border-color: var(--border-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .floating-toolbar::before {
+            content: '✎';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            color: var(--text-color);
+            transition: opacity 0.3s ease;
+        }
+
+        .floating-toolbar:hover::before {
+            opacity: 0;
+        }
+
+        /* Modern Enhanced Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 6px;
+            margin: 2px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.2s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+        }
+
+        /* Firefox Scrollbar */
+        * {
+            scrollbar-width: auto;
+            scrollbar-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.05);
+        }
+
+        /* Dark Mode Scrollbar */
+        body.dark-mode ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid rgba(0, 0, 0, 0.8);
+        }
+
+        body.dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 1);
+            border: 2px solid rgba(0, 0, 0, 0.9);
+        }
+
+        body.dark-mode * {
+            scrollbar-color: rgba(255, 255, 255, 0.95) rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 70px;
+            width: 250px;
+            background: var(--sidebar-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            max-height: calc(100vh - 90px);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.hidden {
+            left: -280px;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .sidebar.visible {
+            left: 20px;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .main-content {
+            margin-left: 290px;
+            margin-right: 20px;
+            width: calc(100% - 310px);
+            transition: all 0.3s ease;
+            height: calc(100vh - 40px);
+        }
+
+        .main-content.expanded {
+            margin-left: 20px;
+            width: calc(100% - 40px);
+        }
+
+        .editor-container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            direction: rtl;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            background-color: transparent;
+        }
+
+        #editor {
+            min-width: auto;
+            width: 100%;
+            min-height: 650px;
+            padding: 20px;
+            border: none;
+            border-radius: 0;
+            background-color: transparent;
+            color: var(--text-color);
+            box-shadow: none;
+            direction: rtl;
+            text-align: right;
+            line-height: 2.1;
+            outline: none;
+            overflow-y: auto;
+            font-size: 24px !important;
+            font-family: 'IRANYekanX', Arial, sans-serif !important;
+            resize: vertical;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        #editor:focus {
+            border-color: transparent;
+            box-shadow: none;
+        }
+
+        /* Text Size Control Menu */
+        .text-size-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .text-size-control button {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            opacity: 0.6;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .text-size-control button:hover {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode .text-size-control {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .text-size-control button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-container" id="notificationContainer"></div>
+    <div class="menu-toggle-container">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    </div>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="margin: 0; font-size: 18px;">یادداشت‌ها</h2>
+        </div>
+        <div class="sidebar-content">
+            <div style="margin-bottom: 20px;">
+                <input type="text" id="documentTitle" placeholder="عنوان سند...">
+                <button onclick="saveDocument()" style="width: 100%; margin-bottom: 5px;">ذخیره سند</button>
+                <button onclick="newDocument()" style="width: 100%;">سند جدید</button>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <input type="text" id="searchDocs" placeholder="جستجو در اسناد..." class="search-box">
+            </div>
+            <div id="documentsList" style="margin-bottom: 20px;"></div>
+        </div>
+    </div>
+    <div class="main-content">
+    <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+    <div class="editor-container">
+    <div id="editor" contenteditable="true" spellcheck="true" style="text-align: right; direction: rtl;">اینجا شروع به نوشتن کنید...</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+    <script>
+        // Notification System
+        const notificationTypes = {
+            success: { icon: '✅', color: '#2ecc71' },
+            error: { icon: '❌', color: '#e74c3c' },
+            warning: { icon: '⚠️', color: '#f1c40f' },
+            info: { icon: 'ℹ️', color: '#3498db' }
+        };
+
+        let notificationQueue = [];
+        let isProcessingQueue = false;
+
+        function processNotificationQueue() {
+            if (isProcessingQueue || notificationQueue.length === 0) return;
+            
+            isProcessingQueue = true;
+            const { title, message, type, duration } = notificationQueue.shift();
+            
+            const container = document.getElementById('notificationContainer');
+            if (!container) return;
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const typeConfig = notificationTypes[type] || notificationTypes.info;
+
+            notification.innerHTML = `
+                <span class="notification-icon">${typeConfig.icon}</span>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.remove(); isProcessingQueue = false; processNotificationQueue();">×</button>
+            `;
+
+            container.appendChild(notification);
+            
+            requestAnimationFrame(() => {
+                notification.classList.add('show');
+            });
+
+            if (duration > 0) {
+                setTimeout(() => {
+                    notification.classList.add('hide');
+                    setTimeout(() => {
+                        if (notification.parentElement) {
+                            notification.remove();
+                        }
+                        isProcessingQueue = false;
+                        processNotificationQueue();
+                    }, 300);
+                }, duration);
+            }
+        }
+
+        function showNotification(title, message, type = 'info', duration = 3000) {
+            notificationQueue.push({ title, message, type, duration });
+            processNotificationQueue();
+        }
+
+        // Focus Mode
+        function toggleFocusMode() {
+            document.body.classList.toggle('focus-mode');
+            const isFocusMode = document.body.classList.contains('focus-mode');
+            localStorage.setItem('focusMode', isFocusMode);
+            showNotification(
+                isFocusMode ? 'حالت تمرکز فعال شد' : 'حالت تمرکز غیرفعال شد',
+                isFocusMode ? 'تمام المان‌های اضافی مخفی شدند' : 'تمام المان‌ها نمایش داده شدند',
+                'info'
+            );
+        }
+
+        // Initialize focus mode from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedFocusMode = localStorage.getItem('focusMode') === 'true';
+            if (savedFocusMode) {
+                document.body.classList.add('focus-mode');
+            }
+        });
+
+        // Replace all alerts with notifications
+        function saveDocument() {
+            const title = document.getElementById('documentTitle').value.trim();
+            if (!title) {
+                showNotification('خطا', 'لطفاً عنوان سند را وارد کنید', 'error');
+                return;
+            }
+
+            const content = editor.innerHTML;
+
+            try {
+                if (!currentDocId) {
+                    currentDocId = Date.now().toString();
+                    documents.push({ 
+                        id: currentDocId, 
+                        title: title, 
+                        content: content, 
+                        createdAt: new Date().toISOString()
+                    });
+                } else {
+                    const docIndex = documents.findIndex(d => d.id === currentDocId);
+                    if (docIndex !== -1) {
+                        documents[docIndex] = { 
+                            id: currentDocId, 
+                            title: title, 
+                            content: content, 
+                            createdAt: documents[docIndex].createdAt
+                        };
+                    }
+                }
+
+                localStorage.setItem('documents', JSON.stringify(documents));
+                updateDocumentsList();
+                showNotification('موفق', 'سند با موفقیت ذخیره شد', 'success');
+            } catch (e) {
+                showNotification('خطا', 'خطا در ذخیره سند: ' + e.message, 'error');
+            }
+        }
+
+        function deleteDocument(id) {
+            const confirmDelete = () => {
+                const index = documents.findIndex(d => d.id === id);
+                if (index !== -1) {
+                    documents.splice(index, 1);
+                    localStorage.setItem('documents', JSON.stringify(documents));
+                    if (currentDocId === id) {
+                        newDocument();
+                    }
+                    updateDocumentsList();
+                    showNotification('موفق', 'سند با موفقیت حذف شد', 'success');
+                }
+            };
+
+            showNotification('هشدار', 'آیا از حذف این سند اطمینان دارید؟', 'warning', 0);
+            const confirmBtn = document.createElement('button');
+            confirmBtn.textContent = 'بله، حذف شود';
+            confirmBtn.style.cssText = `
+                background: #e74c3c;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                margin-top: 8px;
+                cursor: pointer;
+                font-family: 'IRANYekanX', Arial, sans-serif;
+            `;
+            confirmBtn.onclick = () => {
+                confirmDelete();
+                notification.remove();
+            };
+
+            const notification = showNotification('هشدار', 'آیا از حذف این سند اطمینان دارید؟', 'warning', 0);
+            const content = notification.querySelector('.notification-content');
+            content.appendChild(confirmBtn);
+        }
+
+        function toggleTitleFormat() {
+            const selection = window.getSelection();
+            if (!selection.rangeCount || selection.isCollapsed) {
+                showNotification('هشدار', 'لطفاً متن را انتخاب کنید', 'warning');
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            const selectedContent = range.extractContents();
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'title-format';
+            titleSpan.appendChild(selectedContent);
+            range.insertNode(titleSpan);
+
+            // Clear selection and focus editor
+            selection.removeAllRanges();
+            document.getElementById('editor').focus();
+        }
+
+        function removeTitleFormat() {
+            const selection = window.getSelection();
+            if (!selection.rangeCount || selection.isCollapsed) {
+                showNotification('هشدار', 'لطفاً متن را انتخاب کنید', 'warning');
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            const selectedNode = range.commonAncestorContainer;
+            
+            // Find all title-format elements within the selection
+            const titleElements = document.querySelectorAll('.title-format');
+            titleElements.forEach(titleElement => {
+                if (range.intersectsNode(titleElement)) {
+                    // Replace title element with its text content
+                    const text = titleElement.textContent;
+                    const textNode = document.createTextNode(text);
+                    titleElement.parentNode.replaceChild(textNode, titleElement);
+                }
+            });
+
+            // Clear selection and focus editor
+            selection.removeAllRanges();
+            document.getElementById('editor').focus();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            editor = document.getElementById('editor');
+            updateFontSizeDisplay(fontSizes[currentFontSizeIndex]);
+        });
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+            updateThemeButton();
+        }
+
+        function updateThemeButton() {
+            const btn = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('dark-mode')) {
+                btn.innerHTML = '🌙';
+            } else {
+                btn.innerHTML = '☀️';
+            }
+        }
+
+        // Load theme preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            updateThemeButton();
+            
+            // Update color picker for dark mode
+            document.querySelectorAll('.pcr-button').forEach(btn => {
+                btn.style.boxShadow = '0 0 0 1px rgba(255,255,255,0.2)';
+            });
+        }
+        
+        // Update color picker when theme changes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fix color picker in dark mode
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.attributeName === 'class') {
+                        const isDarkMode = document.body.classList.contains('dark-mode');
+                        document.querySelectorAll('.pcr-app').forEach(picker => {
+                            if (isDarkMode) {
+                                picker.style.background = '#2d2d2d';
+                                picker.style.color = '#fff';
+                                picker.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+                            } else {
+                                picker.style.background = '#fff';
+                                picker.style.color = '#000';
+                                picker.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
+                            }
+                        });
+                    }
+                });
+            });
+            
+            observer.observe(document.body, { attributes: true });
+        });
+
+
+        function clearFormatting() {
+            document.getElementById('editor').focus();
+            document.execCommand('removeFormat', false, null);
+            document.execCommand('formatBlock', false, 'DIV');
+        }
+        // Fix horizontal line button color issue
+        document.addEventListener('DOMContentLoaded', function() {
+            const hrButton = document.querySelector('.hr-button');
+            if (hrButton) {
+                // Apply same styling as other buttons
+                hrButton.style.color = getComputedStyle(document.documentElement).getPropertyValue('--text-color');
+                
+                hrButton.addEventListener('click', function() {
+                    // Force focus back to editor after inserting HR
+                    setTimeout(() => {
+                        document.getElementById('editor').focus();
+                    }, 10);
+                });
+            }
+        });
+        
+        function insertHR() {
+            document.getElementById('editor').focus();
+            document.execCommand('insertHorizontalRule');
+        }
+
+
+
+        // Document management
+        let currentDocId = null;
+        let documents = JSON.parse(localStorage.getItem('documents')) || [];
+
+        // Initialize event listeners
+        document.querySelector('button[onclick="saveDocument()"]').addEventListener('click', saveDocument);
+        document.querySelector('button[onclick="newDocument()"]').addEventListener('click', newDocument);
+        document.getElementById('searchDocs').addEventListener('input', updateDocumentsList);
+
+        // Update documents list when page loads
+        updateDocumentsList();
+
+        function updateDocumentsList() {
+            const searchTerm = document.getElementById('searchDocs').value.toLowerCase();
+            const list = document.getElementById('documentsList');
+            list.innerHTML = '';
+            
+            documents
+                .filter(doc => doc.title.toLowerCase().includes(searchTerm))
+                .forEach(doc => {
+                    const docElement = document.createElement('div');
+                    docElement.className = 'document-item';
+                    docElement.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: bold;">${doc.title}</span>
+                            <button onclick="deleteDocument('${doc.id}')" style="padding: 2px 8px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">×</button>
+                        </div>
+                    `;
+                    docElement.onclick = (e) => {
+                        if (e.target.tagName !== 'BUTTON') {
+                            loadDocument(doc.id);
+                        }
+                    };
+                    list.appendChild(docElement);
+                });
+        }
+
+        function loadDocument(id) {
+            const doc = documents.find(d => d.id === id);
+            if (doc) {
+                if (editor.innerHTML !== 'اینجا شروع به نوشتن کنید...' && 
+                    document.getElementById('documentTitle').value.trim() !== '') {
+                    showNotification('هشدار', 'آیا می‌خواهید سند دیگری را باز کنید؟ تغییرات ذخیره نشده از بین خواهند رفت.', 'warning', 0);
+                    const confirmBtn = document.createElement('button');
+                    confirmBtn.textContent = 'بله، باز کردن';
+                    confirmBtn.style.cssText = `
+                        background: #3498db;
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        margin-top: 8px;
+                        cursor: pointer;
+                        font-family: 'IRANYekanX', Arial, sans-serif;
+                    `;
+                    confirmBtn.onclick = () => {
+                        currentDocId = doc.id;
+                        editor.innerHTML = doc.content;
+                        document.getElementById('documentTitle').value = doc.title;
+                        changeFontSize(doc.fontSize);
+                        notification.remove();
+                    };
+
+                    const notification = showNotification('هشدار', 'آیا می‌خواهید سند دیگری را باز کنید؟ تغییرات ذخیره نشده از بین خواهند رفت.', 'warning', 0);
+                    const content = notification.querySelector('.notification-content');
+                    content.appendChild(confirmBtn);
+                } else {
+                    currentDocId = doc.id;
+                    editor.innerHTML = doc.content;
+                    document.getElementById('documentTitle').value = doc.title;
+                    changeFontSize(doc.fontSize);
+                }
+            }
+        }
+
+        function newDocument() {
+            const currentContent = editor.innerHTML;
+            const currentTitle = document.getElementById('documentTitle').value.trim();
+            const savedContent = localStorage.getItem('savedNotes');
+            
+            // Only show warning if there are unsaved changes
+            if (currentContent !== 'اینجا شروع به نوشتن کنید...' && 
+                currentTitle !== '' && 
+                currentContent !== savedContent) {
+                
+                // Remove any existing notifications first
+                const existingNotifications = document.querySelectorAll('.notification');
+                existingNotifications.forEach(notification => notification.remove());
+                
+                const notification = document.createElement('div');
+                notification.className = 'notification warning show';
+                notification.innerHTML = `
+                    <span class="notification-icon">⚠️</span>
+                    <div class="notification-content">
+                        <div class="notification-title">هشدار</div>
+                        <div class="notification-message">آیا می‌خواهید سند جدید ایجاد کنید؟ تغییرات ذخیره نشده از بین خواهند رفت.</div>
+                        <button id="confirmNewDoc" style="
+                            background: #3498db;
+                            color: white;
+                            border: none;
+                            padding: 8px 16px;
+                            border-radius: 4px;
+                            margin-top: 8px;
+                            cursor: pointer;
+                            font-family: 'IRANYekanX', Arial, sans-serif;
+                        ">بله، سند جدید</button>
+                    </div>
+                    <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+                `;
+                
+                document.getElementById('notificationContainer').appendChild(notification);
+                
+                document.getElementById('confirmNewDoc').addEventListener('click', function() {
+                    currentDocId = null;
+                    editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
+                    document.getElementById('documentTitle').value = '';
+                    resetTextSize();
+                    notification.remove();
+                });
+            } else {
+                currentDocId = null;
+                editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
+                document.getElementById('documentTitle').value = '';
+                resetTextSize();
+            }
+        }
+
+        // Color picker initialization
+        const pickr = Pickr.create({
+            el: '#color-picker',
+            theme: 'nano',
+            default: '#000000',
+            swatches: [
+                '#ffffff', '#000000', '#e74c3c', '#f1c40f', '#2ecc71', 
+                '#3498db', '#9b59b6'
+            ],
+            components: {
+                preview: true,
+                opacity: true,
+                hue: true,
+                interaction: {
+                    hex: true,
+                    rgba: true,
+                    hsla: false,
+                    hsva: false,
+                    cmyk: false,
+                    input: true,
+                    clear: false,
+                    save: true
+                }
+            }
+        });  
+        function applyColorToSelection(color) {
+            // Focus the editor and apply color to the current selection
+            editor.focus();
+            document.execCommand('foreColor', false, color.toHEXA().toString());
+        }
+        pickr.on('save', (color) => {
+            applyColorToSelection(color);
+            pickr.hide();
+        });
+        pickr.on('change', (color) => {
+            if (color) {
+                applyColorToSelection(color);
+            }
+        });
+
+        // Initialize
+        document.getElementById('searchDocs').addEventListener('input', updateDocumentsList);
+        updateDocumentsList();
+    </script>
+    <div class="text-size-control">
+        <button onclick="decreaseTextSize()" title="کاهش سایز متن">A-</button>
+        <button onclick="resetTextSize()" title="بازنشانی سایز متن">A</button>
+        <button onclick="increaseTextSize()" title="افزایش سایز متن">A+</button>
+    </div>
+
+    <script>
+        // Global variables
+        let currentTextSize = 24;
+        const editor = document.getElementById('editor');
+
+        // Text Size Control Functions
+        function decreaseTextSize() {
+            if (currentTextSize > 16) {
+                currentTextSize -= 2;
+                editor.style.fontSize = currentTextSize + 'px';
+                localStorage.setItem('textSize', currentTextSize);
+            }
+        }
+
+        function resetTextSize() {
+            currentTextSize = 24;
+            editor.style.fontSize = currentTextSize + 'px';
+            localStorage.setItem('textSize', currentTextSize);
+        }
+
+        function increaseTextSize() {
+            if (currentTextSize < 40) {
+                currentTextSize += 2;
+                editor.style.fontSize = currentTextSize + 'px';
+                localStorage.setItem('textSize', currentTextSize);
+            }
+        }
+
+        // Load saved text size
+        window.addEventListener('load', function() {
+            const savedSize = localStorage.getItem('textSize');
+            if (savedSize) {
+                currentTextSize = parseInt(savedSize);
+                editor.style.fontSize = currentTextSize + 'px';
+            }
+        });
+
+        // Document Management
+        function newDocument() {
+            const currentContent = editor.innerHTML;
+            const currentTitle = document.getElementById('documentTitle').value.trim();
+            const savedContent = localStorage.getItem('savedNotes');
+            
+            // Only show warning if there are unsaved changes
+            if (currentContent !== 'اینجا شروع به نوشتن کنید...' && 
+                currentTitle !== '' && 
+                currentContent !== savedContent) {
+                
+                // Remove any existing notifications first
+                const existingNotifications = document.querySelectorAll('.notification');
+                existingNotifications.forEach(notification => notification.remove());
+                
+                const notification = document.createElement('div');
+                notification.className = 'notification warning show';
+                notification.innerHTML = `
+                    <span class="notification-icon">⚠️</span>
+                    <div class="notification-content">
+                        <div class="notification-title">هشدار</div>
+                        <div class="notification-message">آیا می‌خواهید سند جدید ایجاد کنید؟ تغییرات ذخیره نشده از بین خواهند رفت.</div>
+                        <button id="confirmNewDoc" style="
+                            background: #3498db;
+                            color: white;
+                            border: none;
+                            padding: 8px 16px;
+                            border-radius: 4px;
+                            margin-top: 8px;
+                            cursor: pointer;
+                            font-family: 'IRANYekanX', Arial, sans-serif;
+                        ">بله، سند جدید</button>
+                    </div>
+                    <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+                `;
+                
+                document.getElementById('notificationContainer').appendChild(notification);
+                
+                document.getElementById('confirmNewDoc').addEventListener('click', function() {
+                    currentDocId = null;
+                    editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
+                    document.getElementById('documentTitle').value = '';
+                    resetTextSize();
+                    notification.remove();
+                });
+            } else {
+                currentDocId = null;
+                editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
+                document.getElementById('documentTitle').value = '';
+                resetTextSize();
+            }
+        }
+    </script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (sidebar.classList.contains('hidden')) {
+                // Show sidebar
+                sidebar.classList.remove('hidden');
+                sidebar.classList.add('visible');
+                mainContent.classList.remove('expanded');
+                menuToggle.innerHTML = '✕';
+            } else {
+                // Hide sidebar
+                sidebar.classList.add('hidden');
+                sidebar.classList.remove('visible');
+                mainContent.classList.add('expanded');
+                menuToggle.innerHTML = '☰';
+            }
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (window.innerWidth <= 992 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target) && 
+                sidebar.classList.contains('visible')) {
+                sidebar.classList.add('hidden');
+                sidebar.classList.remove('visible');
+                mainContent.classList.add('expanded');
+                menuToggle.classList.add('active');
+                menuToggle.innerHTML = '✕';
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (window.innerWidth > 992) {
+                // Keep the sidebar state (hidden/visible) when resizing
+                if (sidebar.classList.contains('hidden')) {
+                    sidebar.classList.remove('visible');
+                    mainContent.classList.add('expanded');
+                    menuToggle.classList.add('active');
+                    menuToggle.innerHTML = '✕';
+                } else {
+                    sidebar.classList.add('visible');
+                    mainContent.classList.remove('expanded');
+                    menuToggle.classList.remove('active');
+                    menuToggle.innerHTML = '☰';
+                }
+            }
+        });
+
+        // Initialize menu state
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (sidebar.classList.contains('hidden')) {
+                sidebar.classList.remove('visible');
+                mainContent.classList.add('expanded');
+                menuToggle.classList.add('active');
+                menuToggle.innerHTML = '✕';
+            } else {
+                sidebar.classList.add('visible');
+                mainContent.classList.remove('expanded');
+                menuToggle.classList.remove('active');
+                menuToggle.innerHTML = '☰';
+            }
+        });
+    </script>
+    <div class="floating-toolbar" id="floatingToolbar">
+        <div class="toolbar-content">
+            <div class="toolbar-group">
+                <button onclick="document.execCommand('bold')" title="درشت کردن متن">B</button>
+                <button onclick="document.execCommand('italic')" title="مورب کردن متن">I</button>
+                <button onclick="document.execCommand('underline')" title="زیرخط دار کردن متن">U</button>
+            </div>
+            <div class="toolbar-group">
+                <button onclick="toggleTitleFormat()" class="title-button" title="تبدیل به عنوان">T</button>
+                <button onclick="removeTitleFormat()" class="title-button" title="حذف حالت عنوان" style="color: #e74c3c !important;">t</button>
+            </div>
+            <div class="toolbar-group">
+                <button onclick="document.execCommand('justifyRight')" title="راست‌چین کردن متن">≡ →</button>
+                <button onclick="document.execCommand('justifyCenter')" title="وسط‌چین کردن متن">≡ •</button>
+                <button onclick="document.execCommand('justifyLeft')" title="چپ‌چین کردن متن">≡ ←</button>
+            </div>
+            <div class="toolbar-group">
+                <button onclick="document.execCommand('insertUnorderedList')" title="لیست نقطه‌ای">•</button>
+                <button onclick="document.execCommand('insertOrderedList')" title="لیست شماره‌ای">1.</button>
+            </div>
+            <div class="toolbar-group">
+                <div id="floating-color-picker"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Floating Toolbar
+        const floatingToolbar = document.getElementById('floatingToolbar');
+        let selectionTimeout;
+
+        function showFloatingToolbar(x, y) {
+            floatingToolbar.style.left = `${x}px`;
+            floatingToolbar.style.top = `${y}px`;
+            floatingToolbar.classList.add('show');
+        }
+
+        function hideFloatingToolbar() {
+            floatingToolbar.classList.remove('show');
+        }
+
+        document.getElementById('editor').addEventListener('mouseup', function(e) {
+            const selection = window.getSelection();
+            
+            if (selection.toString().length > 0) {
+                clearTimeout(selectionTimeout);
+                
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                
+                // Calculate position for the toolbar - now on the left and aboveW
+                const x = rect.left - 20; // Show to the left of selection
+                const y = rect.top - 20; // Position above the selection
+                
+                selectionTimeout = setTimeout(() => {
+                    showFloatingToolbar(x, y);
+                }, 100);
+            } else {
+                clearTimeout(selectionTimeout);
+                hideFloatingToolbar();
+            }
+        });
+
+        // Hide toolbar when clicking outside
+        document.addEventListener('mousedown', function(e) {
+            if (!floatingToolbar.contains(e.target) && e.target !== editor) {
+                hideFloatingToolbar();
+            }
+        });
+
+        // Update floating toolbar position on scroll
+        document.getElementById('editor').addEventListener('scroll', function() {
+            const selection = window.getSelection();
+            if (selection.toString().length > 0) {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                const x = rect.left - 20;
+                const y = rect.top - 20;
+                showFloatingToolbar(x, y);
+            }
+        });
+
+        // Update floating toolbar position on window resize
+        window.addEventListener('resize', function() {
+            const selection = window.getSelection();
+            if (selection.toString().length > 0) {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                const x = rect.left - 20;
+                const y = rect.top - 20;
+                showFloatingToolbar(x, y);
+            }
+        });
+    </script>
+</body>
+</html>
+//KHODAFEZ
