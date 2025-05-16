@@ -1406,6 +1406,12 @@
             },
           });
 
+          // Add event listener to apply color on save
+          floatingPickr.on("save", (color, instance) => {
+            applyColorToSelection(color);
+            instance.hide(); // Hide the picker after saving
+          });
+
           function showFloatingToolbar(x, y) {
             floatingToolbar.style.left = `${x}px`;
             floatingToolbar.style.top = `${y}px`;
