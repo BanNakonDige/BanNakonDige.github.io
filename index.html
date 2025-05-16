@@ -81,6 +81,7 @@
             width: 100%;
             min-height: 650px;
             padding: 20px;
+            margin-top: 0;
             border: none;
             border-radius: 0;
             background-color: transparent;
@@ -233,31 +234,35 @@
         }
 
         .sidebar button {
-            padding: 8px 12px;
+            padding: 12px 16px;
             background-color: #4dabf7;
             color: white;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            margin-right: 5px;
+            margin-bottom: 8px;
             font-family: 'IRANYekanX', Arial, sans-serif;
             transition: all 0.3s ease;
             font-weight: 500;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
+
+        .sidebar button:last-of-type {
+             margin-bottom: 15px;
+        }
+
         .sidebar button:hover {
             background-color: #339af0;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
-        
+
         .sidebar button:active {
             transform: translateY(0);
         }
 
         #documentsList {
-            margin-top: 20px;
+            margin-top: 10px;
             max-height: 300px;
             overflow-y: auto;
             background: var(--sidebar-bg);
@@ -265,23 +270,35 @@
         }
 
         .document-item {
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 8px;
             background-color: var(--toolbar-bg);
             border-radius: 6px;
             cursor: pointer;
             display: flex;
+            flex-direction: row;
             justify-content: space-between;
             align-items: center;
             color: var(--text-color);
             transition: all 0.3s ease;
             border: 1px solid transparent;
+            overflow: hidden;
         }
 
         .document-item:hover {
             background-color: var(--button-hover);
             border-color: var(--border-color);
-            transform: translateX(-4px);
+            transform: none;
+        }
+
+        .document-item span {
+            flex-grow: 1;
+            margin-right: 10px;
+            text-align: right;
+            direction: rtl;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .delete-btn {
@@ -289,21 +306,28 @@
             border: none;
             color: #ff6b6b;
             cursor: pointer;
-            font-size: 16px;
-            padding: 4px 8px;
+            font-size: 18px;
+            padding: 0 5px;
             border-radius: 4px;
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease;
+            margin: 0 0 0 10px;
+            flex-shrink: 0;
+            opacity: 0;
+        }
+
+        .document-item:hover .delete-btn {
+            opacity: 1;
         }
 
         .delete-btn:hover {
             background-color: rgba(255,107,107,0.1);
-            transform: scale(1.1);
+            transform: none;
         }
 
         .search-box, #searchBox {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             background: var(--input-bg);
@@ -314,7 +338,7 @@
         #documentTitle {
             width: 100%;
             padding: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             font-family: 'IRANYekanX', Arial, sans-serif;
@@ -379,7 +403,7 @@
             }
 
             #editor {
-                font-size: 22px !important;
+                font-size: 28px;
             }
         }
 
@@ -414,7 +438,7 @@
             }
 
             #editor {
-                font-size: 22px !important;
+                font-size: 28px;
                 min-height: 500px;
             }
 
@@ -443,7 +467,7 @@
             }
 
             #editor {
-                font-size: 18px !important;
+                font-size: 26px;
                 padding: 10px;
             }
 
@@ -654,12 +678,11 @@
         /* Floating Toolbar */
         .floating-toolbar {
             position: fixed;
-            background: var(--editor-bg);
-            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             border-radius: 50%;
             width: 32px;
             height: 32px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             display: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
@@ -668,6 +691,7 @@
             pointer-events: auto;
             cursor: pointer;
             overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .floating-toolbar.show {
@@ -680,15 +704,19 @@
             height: auto;
             border-radius: 8px;
             padding: 8px;
+            overflow: visible;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .floating-toolbar .toolbar-content {
             display: flex;
+            flex-direction: row;
             gap: 4px;
             opacity: 0;
             transform: scale(0.8);
             transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             white-space: nowrap;
+            margin: 0;
         }
 
         .floating-toolbar:hover .toolbar-content {
@@ -701,7 +729,7 @@
             gap: 2px;
             align-items: center;
             padding: 4px;
-            margin: 0 4px;
+            margin: 0;
             background: var(--toolbar-bg);
             border-radius: 6px;
         }
@@ -735,11 +763,6 @@
             color: #2c3e50;
         }
 
-        .floating-toolbar #floating-color-picker {
-            width: 28px;
-            height: 28px;
-        }
-
         .floating-toolbar .pcr-app {
             position: fixed !important;
             top: 50% !important;
@@ -749,9 +772,9 @@
         }
 
         body.dark-mode .floating-toolbar {
-            background: var(--editor-bg);
-            border-color: var(--border-color);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         .floating-toolbar::before {
@@ -822,7 +845,7 @@
             position: fixed;
             left: 20px;
             top: 70px;
-            width: 250px;
+            width: 300px;
             background: var(--sidebar-bg);
             padding: 20px;
             border-radius: 12px;
@@ -875,6 +898,7 @@
             width: 100%;
             min-height: 650px;
             padding: 20px;
+            margin-top: 0;
             border: none;
             border-radius: 0;
             background-color: transparent;
@@ -938,6 +962,34 @@
         body.dark-mode .text-size-control button:hover {
             background: rgba(255, 255, 255, 0.1);
         }
+
+        .sidebar-content > button {
+            padding: 12px 16px;
+            background-color: #4dabf7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            font-family: 'IRANYekanX', Arial, sans-serif;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-content > button:last-of-type {
+             margin-bottom: 15px;
+        }
+
+        .sidebar-content > button:hover {
+            background-color: #339af0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .sidebar-content > button:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -946,19 +998,15 @@
         <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
     </div>
     <div class="sidebar">
-        <div class="sidebar-header">
-            <h2 style="margin: 0; font-size: 18px;">یادداشت‌ها</h2>
-        </div>
         <div class="sidebar-content">
-            <div style="margin-bottom: 20px;">
-                <input type="text" id="documentTitle" placeholder="عنوان سند...">
-                <button onclick="saveDocument()" style="width: 100%; margin-bottom: 5px;">ذخیره سند</button>
-                <button onclick="newDocument()" style="width: 100%;">سند جدید</button>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <input type="text" id="searchDocs" placeholder="جستجو در اسناد..." class="search-box">
-            </div>
-            <div id="documentsList" style="margin-bottom: 20px;"></div>
+            <h2 style="margin: 0 0 15px 0; font-size: 18px; color: var(--text-color);">یادداشت‌ها</h2>
+            <input type="text" id="documentTitle" placeholder="عنوان سند...">
+            <button onclick="saveDocument()">ذخیره سند</button>
+            <button onclick="newDocument()">سند جدید</button>
+            <button onclick="saveToFile()">ذخیره به فایل</button>
+            <button onclick="loadFromFile()">بارگذاری از فایل</button>
+            <input type="text" id="searchDocs" placeholder="جستجو در اسناد..." class="search-box">
+            <div id="documentsList"></div>
         </div>
     </div>
     <div class="main-content">
@@ -1050,14 +1098,16 @@
         // Replace all alerts with notifications
         function saveDocument() {
             const title = document.getElementById('documentTitle').value.trim();
-            if (!title) {
-                showNotification('خطا', 'لطفاً عنوان سند را وارد کنید', 'error');
-                return;
-            }
-
             const content = editor.innerHTML;
 
+            if (!title) {
+                return; // حذف هشدار عدم وجود عنوان
+            }
+
             try {
+                // ذخیره محتوای سند در localStorage
+                localStorage.setItem('savedNotes', content);
+
                 if (!currentDocId) {
                     currentDocId = Date.now().toString();
                     documents.push({ 
@@ -1080,9 +1130,8 @@
 
                 localStorage.setItem('documents', JSON.stringify(documents));
                 updateDocumentsList();
-                showNotification('موفق', 'سند با موفقیت ذخیره شد', 'success');
             } catch (e) {
-                showNotification('خطا', 'خطا در ذخیره سند: ' + e.message, 'error');
+                // حذف هشدار خطا در ذخیره
             }
         }
 
@@ -1100,27 +1149,11 @@
                 }
             };
 
-            showNotification('هشدار', 'آیا از حذف این سند اطمینان دارید؟', 'warning', 0);
-            const confirmBtn = document.createElement('button');
-            confirmBtn.textContent = 'بله، حذف شود';
-            confirmBtn.style.cssText = `
-                background: #e74c3c;
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 4px;
-                margin-top: 8px;
-                cursor: pointer;
-                font-family: 'IRANYekanX', Arial, sans-serif;
-            `;
-            confirmBtn.onclick = () => {
+            // Create a confirmation dialog
+            const confirmation = confirm('آیا از حذف این سند مطمئن هستید؟');
+            if (confirmation) {
                 confirmDelete();
-                notification.remove();
-            };
-
-            const notification = showNotification('هشدار', 'آیا از حذف این سند اطمینان دارید؟', 'warning', 0);
-            const content = notification.querySelector('.notification-content');
-            content.appendChild(confirmBtn);
+            }
         }
 
         function toggleTitleFormat() {
@@ -1276,10 +1309,8 @@
                     const docElement = document.createElement('div');
                     docElement.className = 'document-item';
                     docElement.innerHTML = `
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: bold;">${doc.title}</span>
-                            <button onclick="deleteDocument('${doc.id}')" style="padding: 2px 8px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">×</button>
-                        </div>
+                        <span style="font-weight: bold;">${doc.title}</span>
+                        <button onclick="deleteDocument('${doc.id}')" class="delete-btn">×</button>
                     `;
                     docElement.onclick = (e) => {
                         if (e.target.tagName !== 'BUTTON') {
@@ -1293,132 +1324,28 @@
         function loadDocument(id) {
             const doc = documents.find(d => d.id === id);
             if (doc) {
-                if (editor.innerHTML !== 'اینجا شروع به نوشتن کنید...' && 
-                    document.getElementById('documentTitle').value.trim() !== '') {
-                    showNotification('هشدار', 'آیا می‌خواهید سند دیگری را باز کنید؟ تغییرات ذخیره نشده از بین خواهند رفت.', 'warning', 0);
-                    const confirmBtn = document.createElement('button');
-                    confirmBtn.textContent = 'بله، باز کردن';
-                    confirmBtn.style.cssText = `
-                        background: #3498db;
-                        color: white;
-                        border: none;
-                        padding: 8px 16px;
-                        border-radius: 4px;
-                        margin-top: 8px;
-                        cursor: pointer;
-                        font-family: 'IRANYekanX', Arial, sans-serif;
-                    `;
-                    confirmBtn.onclick = () => {
-                        currentDocId = doc.id;
-                        editor.innerHTML = doc.content;
-                        document.getElementById('documentTitle').value = doc.title;
-                        changeFontSize(doc.fontSize);
-                        notification.remove();
-                    };
-
-                    const notification = showNotification('هشدار', 'آیا می‌خواهید سند دیگری را باز کنید؟ تغییرات ذخیره نشده از بین خواهند رفت.', 'warning', 0);
-                    const content = notification.querySelector('.notification-content');
-                    content.appendChild(confirmBtn);
-                } else {
-                    currentDocId = doc.id;
-                    editor.innerHTML = doc.content;
-                    document.getElementById('documentTitle').value = doc.title;
-                    changeFontSize(doc.fontSize);
-                }
+                // بارگذاری سند
+                currentDocId = doc.id;
+                editor.innerHTML = doc.content;
+                document.getElementById('documentTitle').value = doc.title;
+                changeFontSize(doc.fontSize);
             }
         }
 
         function newDocument() {
-            const currentContent = editor.innerHTML;
-            const currentTitle = document.getElementById('documentTitle').value.trim();
-            const savedContent = localStorage.getItem('savedNotes');
-            
-            // Only show warning if there are unsaved changes
-            if (currentContent !== 'اینجا شروع به نوشتن کنید...' && 
-                currentTitle !== '' && 
-                currentContent !== savedContent) {
-                
-                // Remove any existing notifications first
-                const existingNotifications = document.querySelectorAll('.notification');
-                existingNotifications.forEach(notification => notification.remove());
-                
-                const notification = document.createElement('div');
-                notification.className = 'notification warning show';
-                notification.innerHTML = `
-                    <span class="notification-icon">⚠️</span>
-                    <div class="notification-content">
-                        <div class="notification-title">هشدار</div>
-                        <div class="notification-message">آیا می‌خواهید سند جدید ایجاد کنید؟ تغییرات ذخیره نشده از بین خواهند رفت.</div>
-                        <button id="confirmNewDoc" style="
-                            background: #3498db;
-                            color: white;
-                            border: none;
-                            padding: 8px 16px;
-                            border-radius: 4px;
-                            margin-top: 8px;
-                            cursor: pointer;
-                            font-family: 'IRANYekanX', Arial, sans-serif;
-                        ">بله، سند جدید</button>
-                    </div>
-                    <button class="notification-close" onclick="this.parentElement.remove()">×</button>
-                `;
-                
-                document.getElementById('notificationContainer').appendChild(notification);
-                
-                document.getElementById('confirmNewDoc').addEventListener('click', function() {
-                    currentDocId = null;
-                    editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
-                    document.getElementById('documentTitle').value = '';
-                    resetTextSize();
-                    notification.remove();
-                });
-            } else {
-                currentDocId = null;
-                editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
-                document.getElementById('documentTitle').value = '';
-                resetTextSize();
-            }
+            currentDocId = null;
+            editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
+            document.getElementById('documentTitle').value = '';
+            resetTextSize();
         }
 
         // Color picker initialization
-        const pickr = Pickr.create({
-            el: '#color-picker',
-            theme: 'nano',
-            default: '#000000',
-            swatches: [
-                '#ffffff', '#000000', '#e74c3c', '#f1c40f', '#2ecc71', 
-                '#3498db', '#9b59b6'
-            ],
-            components: {
-                preview: true,
-                opacity: true,
-                hue: true,
-                interaction: {
-                    hex: true,
-                    rgba: true,
-                    hsla: false,
-                    hsva: false,
-                    cmyk: false,
-                    input: true,
-                    clear: false,
-                    save: true
-                }
-            }
-        });  
+        
         function applyColorToSelection(color) {
             // Focus the editor and apply color to the current selection
             editor.focus();
             document.execCommand('foreColor', false, color.toHEXA().toString());
         }
-        pickr.on('save', (color) => {
-            applyColorToSelection(color);
-            pickr.hide();
-        });
-        pickr.on('change', (color) => {
-            if (color) {
-                applyColorToSelection(color);
-            }
-        });
 
         // Initialize
         document.getElementById('searchDocs').addEventListener('input', updateDocumentsList);
@@ -1432,29 +1359,35 @@
 
     <script>
         // Global variables
-        let currentTextSize = 24;
+        let currentTextSize = 30;
         const editor = document.getElementById('editor');
 
         // Text Size Control Functions
         function decreaseTextSize() {
+            console.log('decreaseTextSize called');
             if (currentTextSize > 16) {
                 currentTextSize -= 2;
                 editor.style.fontSize = currentTextSize + 'px';
                 localStorage.setItem('textSize', currentTextSize);
+                console.log('New text size:', currentTextSize);
             }
         }
 
         function resetTextSize() {
-            currentTextSize = 24;
+            console.log('resetTextSize called');
+            currentTextSize = 30;
             editor.style.fontSize = currentTextSize + 'px';
             localStorage.setItem('textSize', currentTextSize);
+            console.log('New text size:', currentTextSize);
         }
 
         function increaseTextSize() {
+            console.log('increaseTextSize called');
             if (currentTextSize < 40) {
                 currentTextSize += 2;
                 editor.style.fontSize = currentTextSize + 'px';
                 localStorage.setItem('textSize', currentTextSize);
+                console.log('New text size:', currentTextSize);
             }
         }
 
@@ -1463,61 +1396,21 @@
             const savedSize = localStorage.getItem('textSize');
             if (savedSize) {
                 currentTextSize = parseInt(savedSize);
-                editor.style.fontSize = currentTextSize + 'px';
+            } else {
+                // If no saved size, use the default initial size (30)
+                localStorage.setItem('textSize', currentTextSize);
             }
+             // Always apply the determined size on load
+            editor.style.fontSize = currentTextSize + 'px';
+            updateFontSizeDisplay(currentTextSize); // Assuming you have a display function
         });
 
         // Document Management
         function newDocument() {
-            const currentContent = editor.innerHTML;
-            const currentTitle = document.getElementById('documentTitle').value.trim();
-            const savedContent = localStorage.getItem('savedNotes');
-            
-            // Only show warning if there are unsaved changes
-            if (currentContent !== 'اینجا شروع به نوشتن کنید...' && 
-                currentTitle !== '' && 
-                currentContent !== savedContent) {
-                
-                // Remove any existing notifications first
-                const existingNotifications = document.querySelectorAll('.notification');
-                existingNotifications.forEach(notification => notification.remove());
-                
-                const notification = document.createElement('div');
-                notification.className = 'notification warning show';
-                notification.innerHTML = `
-                    <span class="notification-icon">⚠️</span>
-                    <div class="notification-content">
-                        <div class="notification-title">هشدار</div>
-                        <div class="notification-message">آیا می‌خواهید سند جدید ایجاد کنید؟ تغییرات ذخیره نشده از بین خواهند رفت.</div>
-                        <button id="confirmNewDoc" style="
-                            background: #3498db;
-                            color: white;
-                            border: none;
-                            padding: 8px 16px;
-                            border-radius: 4px;
-                            margin-top: 8px;
-                            cursor: pointer;
-                            font-family: 'IRANYekanX', Arial, sans-serif;
-                        ">بله، سند جدید</button>
-                    </div>
-                    <button class="notification-close" onclick="this.parentElement.remove()">×</button>
-                `;
-                
-                document.getElementById('notificationContainer').appendChild(notification);
-                
-                document.getElementById('confirmNewDoc').addEventListener('click', function() {
-                    currentDocId = null;
-                    editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
-                    document.getElementById('documentTitle').value = '';
-                    resetTextSize();
-                    notification.remove();
-                });
-            } else {
-                currentDocId = null;
-                editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
-                document.getElementById('documentTitle').value = '';
-                resetTextSize();
-            }
+            currentDocId = null;
+            editor.innerHTML = 'اینجا شروع به نوشتن کنید...';
+            document.getElementById('documentTitle').value = '';
+            resetTextSize();
         }
     </script>
     <script>
@@ -1630,10 +1523,57 @@
         const floatingToolbar = document.getElementById('floatingToolbar');
         let selectionTimeout;
 
+        // Color picker initialization for the floating toolbar
+        const floatingPickr = Pickr.create({
+            el: '#floating-color-picker',
+            theme: 'nano',
+            default: '#000000',
+            swatches: [
+                '#ffffff', '#000000', '#e74c3c', '#f1c40f', '#2ecc71',
+                '#3498db', '#9b59b6'
+            ],
+            components: {
+                preview: true,
+                opacity: true,
+                hue: true,
+                interaction: {
+                    hex: true,
+                    rgba: true,
+                    hsla: false,
+                    hsva: false,
+                    cmyk: false,
+                    input: true,
+                    clear: false,
+                    save: true
+                }
+            }
+        });
+
+        function applyColorToSelection(color) {
+            // Focus the editor and apply color to the current selection
+            editor.focus();
+            document.execCommand('foreColor', false, color.toHEXA().toString());
+        }
+
+        floatingPickr.on('save', (color) => {
+            applyColorToSelection(color);
+            floatingPickr.hide();
+        });
+
+        floatingPickr.on('change', (color) => {
+            if (color) {
+                applyColorToSelection(color);
+            }
+        });
+
         function showFloatingToolbar(x, y) {
             floatingToolbar.style.left = `${x}px`;
             floatingToolbar.style.top = `${y}px`;
             floatingToolbar.classList.add('show');
+            // Explicitly show the pickr instance when the toolbar is shown
+            if (pickr) {
+                pickr.show();
+            }
         }
 
         function hideFloatingToolbar() {
@@ -1693,6 +1633,45 @@
             }
         });
     </script>
+    <script>
+        function saveToFile() {
+            const title = document.getElementById('documentTitle').value.trim();
+            const content = editor.innerHTML;
+
+            if (!title) {
+                alert('لطفاً عنوان سند را وارد کنید');
+                return;
+            }
+
+            const blob = new Blob([content], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${title}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+    <script>
+        function loadFromFile() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.html';
+            input.onchange = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        editor.innerHTML = e.target.result;
+                        document.getElementById('documentTitle').value = file.name.replace('.html', '');
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+    </script>
 </body>
 </html>
-//KHODAFEZ
